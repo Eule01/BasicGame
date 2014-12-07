@@ -129,6 +129,16 @@ namespace GameCore.Utils
             return new Vector(p.X, p.Y);
         }
 
+        public static implicit operator SizeF(Vector p)
+        {
+            return new SizeF(p.X, p.Y);
+        }
+
+        public static implicit operator Vector(SizeF p)
+        {
+            return new Vector(p.Width, p.Height);
+        }
+
         public static Vector operator +(Vector a, Vector b)
         {
             return new Vector(a.X + b.X, a.Y + b.Y);
@@ -147,6 +157,11 @@ namespace GameCore.Utils
         public static Vector operator *(Vector a, float b)
         {
             return new Vector(a.X*b, a.Y*b);
+        }
+
+        public static Vector operator /(Vector a, float b)
+        {
+            return new Vector(a.X / b, a.Y / b);
         }
 
         public static Vector operator *(Vector a, int b)

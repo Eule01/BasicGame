@@ -2,31 +2,78 @@
 
 using System.Drawing;
 using GameCore.Map;
+using GameCore.Utils;
 
 #endregion
 
 namespace GameCore.Render
 {
-    public class Renderer
+    public abstract class Renderer
     {
-        private GameStatus theGameStatus;
+        private readonly GameStatus theGameStatus;
+
+        private float zoomFactor = 20.0f;
+        private float oneOverZoomFactor;
+
+        private Vector origin = new Vector(0, 0);
+
+        internal Vector DispTileSize;
+
+
+        protected Renderer()
+        {
+            Init();
+        }
+
 
         public Renderer(GameStatus aGameStatus)
         {
             theGameStatus = aGameStatus;
+            Init();
         }
 
-        public void DrawTile(Tile aTile)
+        private void Init()
         {
-
+            ZoomChanged();
         }
+
+        protected abstract void DrawTile(Tile aTile, Vector vector);
+
+        private void ZoomChanged()
+        {
+            oneOverZoomFactor = 1.0f/zoomFactor;
+            DispTileSize = GameToDisplaySize(Tile.Size);
+        }
+
+        internal Vector GameToDisplay(Vector aGameVector)
+        {
+            Vector disVec = (aGameVector + origin)*zoomFactor;
+            return disVec;
+        }
+
+        internal Vector DisplayToGame(Vector aDisVector)
+        {
+            Vector gameVec = aDisVector*oneOverZoomFactor - origin;
+            return gameVec;
+        }
+
+        internal Vector GameToDisplaySize(Vector aGameSize)
+        {
+            return aGameSize*zoomFactor;
+        }
+
+        internal Vector DisplayToGameSize(Vector aDisplaySize)
+        {
+            return aDisplaySize * oneOverZoomFactor;
+        }
+
 
         internal void DrawGame()
         {
             DrawMap();
         }
 
-        private void DrawMap()
+        public void DrawMap()
         {
             Map.Map tempMap = theGameStatus.theMap;
             Size tempMapSize = tempMap.TheSize;
@@ -35,7 +82,7 @@ namespace GameCore.Render
                 for (int y = 0; y < tempMapSize.Height; y++)
                 {
                     Tile aTile = tempMap[x, y];
-                    DrawTile(aTile);
+                    DrawTile(aTile, new Vector(x, y));
                 }
             }
         }

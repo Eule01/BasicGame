@@ -5,7 +5,7 @@
         /// <summary>
         ///     The tile map of this status.
         /// </summary>
-        private Map.Map theMap;
+        internal Map.Map theMap;
 
         /// <summary>
         ///     The millisecond run from start for this status.

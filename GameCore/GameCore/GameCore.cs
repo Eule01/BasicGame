@@ -1,6 +1,7 @@
 ﻿#region
 
 using GameCore.Engine;
+using GameCore.Render;
 using GameCore.Utils.Timers;
 
 #endregion
@@ -15,6 +16,8 @@ namespace GameCore
         private GameStatus theGameStatus;
 
         private GameEngine theGameEngine;
+
+        private Render.Renderer theRenderer;
 
         /// <summary>
         ///     This is holding the game core so it can be seen from all other classes. This is not best practice I guess.
@@ -32,6 +35,17 @@ namespace GameCore
             theGameCore = this;
             theGameEngine = new GameEngine();
             theGameStatus = new GameStatus();
+        }
+
+        public GameStatus TheGameStatus
+        {
+            get { return theGameStatus; }
+        }
+
+        public Renderer TheRenderer
+        {
+            get { return theRenderer; }
+            set { theRenderer = value; }
         }
 
         private void GameCore_TheGameEventHandler(object sender, GameEventArgs args)

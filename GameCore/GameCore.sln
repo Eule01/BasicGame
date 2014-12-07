@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameCore", "GameCore\GameCo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "TestConsole\TestConsole.csproj", "{7711E95E-56E6-414F-87CA-45F4C6FC5121}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameTestForm", "GameTestForm\GameTestForm.csproj", "{0B58749D-D753-445F-9A68-57E3065FA81C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{7711E95E-56E6-414F-87CA-45F4C6FC5121}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7711E95E-56E6-414F-87CA-45F4C6FC5121}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7711E95E-56E6-414F-87CA-45F4C6FC5121}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B58749D-D753-445F-9A68-57E3065FA81C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B58749D-D753-445F-9A68-57E3065FA81C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B58749D-D753-445F-9A68-57E3065FA81C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B58749D-D753-445F-9A68-57E3065FA81C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
