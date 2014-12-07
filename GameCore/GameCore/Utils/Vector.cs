@@ -42,7 +42,7 @@ namespace GameCore.Utils
             float mag = Magnitude;
             if (mag < 0.0000000001f)
             {
-                // TODO return errror
+                // TODO return error
                 return;
             }
             float oneOverMagnitude = 1.0f/mag;
@@ -92,7 +92,7 @@ namespace GameCore.Utils
         }
 
         /// <summary>
-        ///     Rotate by an angle the tanslate by a vector.
+        ///     Rotate by an angle the translate by a vector.
         /// </summary>
         /// <param name="trans"></param>
         /// <param name="rot"></param>
@@ -188,14 +188,14 @@ namespace GameCore.Utils
 
         public override string ToString()
         {
-            return X + ", " + Y;
+            return "(" + Math.Round(X,2) + ", " + (int)Math.Round(Y,2) + ")";
         }
 
         public string ToString(bool rounded)
         {
             if (rounded)
             {
-                return (int) Math.Round(X) + ", " + (int) Math.Round(Y);
+                return "(" + (int)Math.Round(X) + ", " + (int)Math.Round(Y) + ")";
             }
             else
             {
