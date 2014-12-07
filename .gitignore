@@ -218,3 +218,5 @@ pip-log.txt
 *.cache
 *.cache
 *.cache
+*.suo
+*.suo
