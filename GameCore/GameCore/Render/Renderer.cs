@@ -1,8 +1,10 @@
 ﻿#region
 
 using System.Drawing;
+using GameCore.GameObjects;
 using GameCore.Map;
 using GameCore.Utils;
+using GameCore.Utils.Timers;
 
 #endregion
 
@@ -11,6 +13,14 @@ namespace GameCore.Render
     public abstract class Renderer
     {
         private readonly GameStatus theGameStatus;
+
+        private TickEngine theTickEngine;
+
+        /// <summary>
+        ///     The renderer time interval in milliseconds.
+        /// </summary>
+        private const int refreshIntervalMs = 50;
+
 
         private float zoomFactor = 20.0f;
         private float oneOverZoomFactor;
@@ -35,15 +45,40 @@ namespace GameCore.Render
         private void Init()
         {
             ZoomChanged();
+            theTickEngine = new TickEngine("Renderer", UpdateRender, StatusTick, refreshIntervalMs);
+            theTickEngine.Start();
+        }
+
+        public void Close()
+        {
+            theTickEngine.Close();
+        }
+
+
+        /// <summary>
+        ///     Here all the game action is computed. This is called every refreshIntervalMs
+        /// </summary>
+        protected abstract void UpdateRender();
+
+
+        private void StatusTick(OpStatus opstatus)
+        {
+            GameCore.TheGameCore.OnGameEventHandler(new GameEventArgs(GameEventArgs.Types.Status)
+                {
+                    TheOpStatus = opstatus
+                });
         }
 
         protected abstract void DrawTile(Tile aTile, Vector vector);
+        protected abstract void DrawGameObject(GameObject aGameObject);
 
         private void ZoomChanged()
         {
             oneOverZoomFactor = 1.0f/zoomFactor;
             DispTileSize = GameToDisplaySize(Tile.Size);
         }
+
+        #region Coordinate transformations
 
         internal Vector GameToDisplay(Vector aGameVector)
         {
@@ -62,20 +97,35 @@ namespace GameCore.Render
             return aGameSize*zoomFactor;
         }
 
+        internal float GameToDisplayDistance(float aGameDistance)
+        {
+            return aGameDistance*zoomFactor;
+        }
+
         internal Vector DisplayToGameSize(Vector aDisplaySize)
         {
-            return aDisplaySize * oneOverZoomFactor;
+            return aDisplaySize*oneOverZoomFactor;
         }
 
+        #endregion
 
-        internal void DrawGame()
+        public void DrawGame()
         {
             DrawMap();
+            DrawGameObjects();
         }
 
-        public void DrawMap()
+        private void DrawGameObjects()
         {
-            Map.Map tempMap = theGameStatus.theMap;
+            foreach (GameObject aGameObject in theGameStatus.GameObjects)
+            {
+                DrawGameObject(aGameObject);
+            }
+        }
+
+        private void DrawMap()
+        {
+            Map.Map tempMap = theGameStatus.TheMap;
             Size tempMapSize = tempMap.TheSize;
             for (int x = 0; x < tempMapSize.Width; x++)
             {

@@ -1,11 +1,27 @@
-﻿namespace GameCore
+﻿#region
+
+using System.Collections.Generic;
+using GameCore.GameObjects;
+using GameCore.Utils;
+
+#endregion
+
+namespace GameCore
 {
     public class GameStatus
     {
         /// <summary>
         ///     The tile map of this status.
         /// </summary>
-        internal Map.Map theMap;
+        internal Map.Map TheMap;
+
+        /// <summary>
+        ///     This contains all the game objects.
+        /// </summary>
+        internal List<GameObject> GameObjects;
+
+
+        internal GameObject ThePlayer;
 
         /// <summary>
         ///     The millisecond run from start for this status.
@@ -19,8 +35,18 @@
 
         private void Init()
         {
-            theMap = new Map.Map();
+            GameObjects = new List<GameObject>();
+            TheMap = Map.Map.GetTestMap();
             theMilliSeconds = 0;
+        }
+
+        internal static GameStatus CreatTestGame()
+        {
+            GameStatus tempGameStatus = new GameStatus {TheMap = Map.Map.GetTestMap()};
+            GameObject tempPlayer = new GameObject(GameObject.ObjcetIds.Player) {Location = new Vector(10.3, 5.6)};
+            tempGameStatus.ThePlayer = tempPlayer;
+            tempGameStatus.GameObjects.Add(tempPlayer);
+            return tempGameStatus;
         }
 
 
@@ -44,12 +70,11 @@
 
 
         /// <summary>
-        /// Closes this object and disposes everything.
+        ///     Closes this object and disposes everything.
         /// </summary>
         public void Close()
         {
-            theMap.Close();
-
+            TheMap.Close();
         }
     }
 }

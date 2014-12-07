@@ -22,6 +22,12 @@ namespace GameCore.Utils
             Y = y;
         }
 
+        public Vector(double x, double y)
+        {
+            X = (float) x;
+            Y = (float) y;
+        }
+
         public float Magnitude
         {
             get { return (float) Math.Sqrt(X*X + Y*Y); }

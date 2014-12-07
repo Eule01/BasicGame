@@ -33,6 +33,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,7 +44,9 @@
     <Compile Include="Engine\GameEngine.cs" />
     <Compile Include="GameCore.cs" />
     <Compile Include="GameEventArgs.cs" />
+    <Compile Include="GameObjects\GameObject.cs" />
     <Compile Include="GameStatus.cs" />
+    <Compile Include="Interface\UserInput.cs" />
     <Compile Include="Map\Map.cs" />
     <Compile Include="Map\Tile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -60,7 +63,10 @@
     <Compile Include="Utils\Vector.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Interface\" />
+    <ProjectReference Include="..\External\Async\Async.csproj">
+      <Project>{18BCA4A3-F860-4558-9EB7-0C7FECDBD3BE}</Project>
+      <Name>Async</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

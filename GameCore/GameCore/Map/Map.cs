@@ -22,7 +22,7 @@ namespace GameCore.Map
         /// </summary>
         private void Init()
         {
-            theSize = new Size(20, 30);
+            theSize = new Size(20, 20);
             theTiles = CreatTestTiles(theSize);
         }
 
@@ -38,6 +38,12 @@ namespace GameCore.Map
                 return theTiles[x,y];
             }
         }
+
+        internal static Map GetTestMap()
+        {
+            return new Map();
+        }
+
 
         private static Tile[,] CreatTestTiles(Size aSize)
         {

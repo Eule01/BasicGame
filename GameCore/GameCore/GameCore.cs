@@ -1,6 +1,7 @@
 ﻿#region
 
 using GameCore.Engine;
+using GameCore.Interface;
 using GameCore.Render;
 using GameCore.Utils.Timers;
 
@@ -17,12 +18,12 @@ namespace GameCore
 
         private GameEngine theGameEngine;
 
-        private Render.Renderer theRenderer;
+        private Renderer theRenderer;
 
         /// <summary>
         ///     This is holding the game core so it can be seen from all other classes. This is not best practice I guess.
         /// </summary>
-        internal static GameCore theGameCore;
+        internal static GameCore TheGameCore;
 
         public GameCore()
         {
@@ -32,9 +33,10 @@ namespace GameCore
         private void Init()
         {
             TheGameEventHandler += GameCore_TheGameEventHandler;
-            theGameCore = this;
+            TheGameCore = this;
             theGameEngine = new GameEngine();
-            theGameStatus = new GameStatus();
+//            theGameStatus = new GameStatus();
+            theGameStatus = GameStatus.CreatTestGame();
         }
 
         public GameStatus TheGameStatus
@@ -48,12 +50,17 @@ namespace GameCore
             set { theRenderer = value; }
         }
 
+        public UserInput TheUserInput
+        {
+            get { return theGameEngine.TheUserInput; }
+        }
+
         private void GameCore_TheGameEventHandler(object sender, GameEventArgs args)
         {
         }
 
         /// <summary>
-        /// Raise a message.
+        ///     Raise a message.
         /// </summary>
         /// <param name="aMessage"></param>
         internal void RaiseMessage(string aMessage)
@@ -82,6 +89,7 @@ namespace GameCore
         public void Close()
         {
             theGameEngine.Close();
+            theRenderer.Close();
             theGameStatus.Close();
         }
 

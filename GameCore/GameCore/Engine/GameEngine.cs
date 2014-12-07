@@ -1,5 +1,8 @@
 ﻿#region
 
+using GameCore.GameObjects;
+using GameCore.Interface;
+using GameCore.Utils;
 using GameCore.Utils.Timers;
 
 #endregion
@@ -15,6 +18,8 @@ namespace GameCore.Engine
         /// </summary>
         private const int timerTickIntervalMs = 10;
 
+        private UserInput theUserInput;
+
         public GameEngine()
         {
             Init();
@@ -25,12 +30,18 @@ namespace GameCore.Engine
         /// </summary>
         private void Init()
         {
-            theTickEngine = new TickEngine("GameEngine",GameTick, StatusTick, timerTickIntervalMs);
+            theUserInput = new UserInput();
+            theTickEngine = new TickEngine("GameEngine", GameTick, StatusTick, timerTickIntervalMs);
+        }
+
+        public UserInput TheUserInput
+        {
+            get { return theUserInput; }
         }
 
         private void StatusTick(OpStatus opstatus)
         {
-            GameCore.theGameCore.OnGameEventHandler(new GameEventArgs(GameEventArgs.Types.Status)
+            GameCore.TheGameCore.OnGameEventHandler(new GameEventArgs(GameEventArgs.Types.Status)
                 {
                     TheOpStatus = opstatus
                 });
@@ -43,6 +54,15 @@ namespace GameCore.Engine
         /// </summary>
         private void GameTick()
         {
+            GameObject thePlayer = GameCore.TheGameCore.TheGameStatus.ThePlayer;
+            if (theUserInput.Forward)
+            {
+                thePlayer.Location += new Vector(0.01f, 0);
+            }
+            else if (theUserInput.Backward)
+            {
+                thePlayer.Location += new Vector(-0.01f, 0);
+            }
         }
 
         /// <summary>

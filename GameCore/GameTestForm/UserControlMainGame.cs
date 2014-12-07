@@ -1,6 +1,5 @@
 ﻿#region
 
-using System.Drawing;
 using System.Windows.Forms;
 using GameCore.Render;
 
@@ -16,18 +15,28 @@ namespace GameTestForm
         public UserControlMainGame()
         {
             InitializeComponent();
+            Init();
+        }
+
+        private void Init()
+        {
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.UserPaint, true);
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         }
 
         public UserControlMainGame(GameCore.GameCore aGameCore)
         {
             theGameCore = aGameCore;
             theRenderer = (RendererGdi) aGameCore.TheRenderer;
+            theRenderer.TheRenderControl = this;
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
             theRenderer.TheGraphics = e.Graphics;
-            theRenderer.DrawMap();
+            theRenderer.DrawGame();
+//            Invalidate();
         }
     }
 }
