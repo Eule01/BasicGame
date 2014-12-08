@@ -1,7 +1,14 @@
 
 
+Version control:
+http://en.wikipedia.org/wiki/Comparison_of_revision_control_software
 
 
+Softare hosting:
+http://en.wikipedia.org/wiki/Comparison_of_open-source_software_hosting_facilities
+
+Kiln
+http://www.fogcreek.com/
 
 
 Rendering:
@@ -40,3 +47,8 @@ http://www.streamica.com/#!sharpdx/YT-0o0pDJH51YA
 
 3d:
 http://blogs.msdn.com/b/davrous/archive/2013/06/13/tutorial-series-learning-how-to-write-a-3d-soft-engine-from-scratch-in-c-typescript-or-javascript.aspx
+
+
+
+OpenGL:
+
