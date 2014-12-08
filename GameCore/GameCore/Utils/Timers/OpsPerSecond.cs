@@ -12,8 +12,8 @@ namespace GameCore.Utils.Timers
     public class OpsPerSecond
     {
         private long lastStatusTime;
-        private int lastOpsCount;
-        private int opsCount;
+        private long lastOpsCount;
+        private long opsCount;
 
         private readonly Timer timerStatus;
         private int timerStatusIntervall = 1000;
@@ -84,19 +84,20 @@ namespace GameCore.Utils.Timers
             if (lastStatusTime > 0)
             {
                 long timeSpan = now - lastStatusTime;
-                double deltOpCount = (opsCount - lastOpsCount);
-                double frameRate = (deltOpCount/(timeSpan*AccurateStopWatch.OneOverFreq));
+                float deltOpCount = (opsCount - lastOpsCount);
+                float frameRate = (float) (deltOpCount/(timeSpan*AccurateStopWatch.OneOverFreq));
                 if (intervalMaxTime > maxTime)
                 {
                     maxTime = intervalMaxTime;
                 }
 
                 opStatus.Ops = frameRate;
-                opStatus.AvrOpTime = sumOpTime;
+                opStatus.Load = (float)sumOpTime /timeSpan * 100.0f;
+
                 opStatus.MissedFrames = missedFrames;
-                opStatus.AvrOpTime = sumOpTime/deltOpCount*AccurateStopWatch.OneOverFreq;
-                opStatus.MaxTime = maxTime*AccurateStopWatch.OneOverFreq;
-                opStatus.IntervalMaxTime = intervalMaxTime*AccurateStopWatch.OneOverFreq;
+                opStatus.AvrOpTime = (float) (sumOpTime/deltOpCount*AccurateStopWatch.OneOverFreq);
+                opStatus.MaxTime = (float) (maxTime*AccurateStopWatch.OneOverFreq);
+                opStatus.IntervalMaxTime = (float) (intervalMaxTime*AccurateStopWatch.OneOverFreq);
                 // Report status.
                 if (statusStringDelegate != null)
                 {
@@ -113,6 +114,5 @@ namespace GameCore.Utils.Timers
         {
             missedFrames++;
         }
-
     }
 }

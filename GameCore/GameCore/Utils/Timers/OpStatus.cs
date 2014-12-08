@@ -8,16 +8,21 @@
         public const string TEXT_MAX_TIME = "Max time: ";
         public const string TEXT_INTERVAL_MAX_TIME = "Int. max time: ";
 
-        private double ops = 0.0;
-        private double avrOpTime = 0.0;
+        private float ops = 0.0f;
+        private float avrOpTime = 0.0f;
         private long missedFrames = 0;
-        private double maxTime = 0.0;
-        private double intervalMaxTime = 0.0;
+        private float maxTime = 0.0f;
+        private float intervalMaxTime = 0.0f;
         private string name;
+
+        /// <summary>
+        ///     The work load of the process [%].
+        /// </summary>
+        public float Load;
 
         public OpStatus(string aName)
         {
-            this.name = aName;
+            name = aName;
         }
 
         public string Name
@@ -25,13 +30,13 @@
             get { return name; }
         }
 
-        public double Ops
+        public float Ops
         {
             get { return ops; }
             set { ops = value; }
         }
 
-        public double AvrOpTime
+        public float AvrOpTime
         {
             get { return avrOpTime; }
             set { avrOpTime = value; }
@@ -44,13 +49,13 @@
             set { missedFrames = value; }
         }
 
-        public double MaxTime
+        public float MaxTime
         {
             get { return maxTime; }
             set { maxTime = value; }
         }
 
-        public double IntervalMaxTime
+        public float IntervalMaxTime
         {
             get { return intervalMaxTime; }
             set { intervalMaxTime = value; }
@@ -79,8 +84,9 @@
 
         public override string ToString()
         {
-            string outStr = name+":";
-            outStr += " FPS: " + ops.ToString("0.0") + "Hz ";
+            string outStr = name + ":";
+            outStr += " FPS: " + ops.ToString("0.0") + "Hz";
+            outStr += " load: " + Load.ToString("0.0") + "%";
             outStr += " avr. Time: " + GetNiceTime(avrOpTime);
             outStr += " missed frames: " + missedFrames;
             outStr += " interval max time: " + GetNiceTime(intervalMaxTime);

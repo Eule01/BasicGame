@@ -23,7 +23,7 @@ namespace GameCore.UserControls
 
         private void Init()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 6; i++)
             {
                 Label tempLabel = new Label();
                 statusLabel.Add(tempLabel);
@@ -52,18 +52,20 @@ namespace GameCore.UserControls
             if (opStatus == null)
             {
                 statusLabel[0].Text = "FPS: " + "-" + "Hz";
-                statusLabel[1].Text = "Avr. Time: " + "-";
-                statusLabel[2].Text = "Missed frames: " + "-";
-                statusLabel[3].Text = "Interval max time: " + "-";
-                statusLabel[4].Text = "Max time: " + "-";
+                statusLabel[1].Text = "Load: " + "-" + "%";
+                statusLabel[2].Text = "Avr. Time: " + "-";
+                statusLabel[3].Text = "Missed frames: " + "-";
+                statusLabel[4].Text = "Interval max time: " + "-";
+                statusLabel[5].Text = "Max time: " + "-";
             }
             else
             {
                 statusLabel[0].Text = "FPS: " + opStatus.Ops.ToString("0.0") + "Hz";
-                statusLabel[1].Text = "Avr. Time: " + OpStatus.GetNiceTime(opStatus.AvrOpTime);
-                statusLabel[2].Text = "Missed frames: " + opStatus.MissedFrames;
-                statusLabel[3].Text = "Interval max time: " + OpStatus.GetNiceTime(opStatus.IntervalMaxTime);
-                statusLabel[4].Text = "Max time: " + OpStatus.GetNiceTime(opStatus.MaxTime);
+                statusLabel[1].Text = "Load: " + opStatus.Load.ToString("0.0") + "%";
+                statusLabel[2].Text = "Avr. Time: " + OpStatus.GetNiceTime(opStatus.AvrOpTime);
+                statusLabel[3].Text = "Missed frames: " + opStatus.MissedFrames;
+                statusLabel[4].Text = "Interval max time: " + OpStatus.GetNiceTime(opStatus.IntervalMaxTime);
+                statusLabel[5].Text = "Max time: " + OpStatus.GetNiceTime(opStatus.MaxTime);
             }
             Update();
 //            Invalidate();
