@@ -1,4 +1,6 @@
-﻿namespace GameCore.Interface
+﻿using System.Drawing;
+
+namespace GameCore.Interface
 {
     /// <summary>
     ///     This class gets the user input and will be used by the engine to update the game status
@@ -14,5 +16,8 @@
         ///     Move player backward.
         /// </summary>
         public bool Backward;
+
+
+        public PointF MousePosition;
     }
 }

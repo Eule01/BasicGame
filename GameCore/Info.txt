@@ -5,6 +5,14 @@
 
 
 Rendering:
+
+GDI
+
+http://www.codeproject.com/Tips/66909/Rendering-fast-with-GDI-What-to-do-and-what-not-to
+http://bytes.com/topic/c-sharp/answers/704158-mighty-bitblt
+http://stackoverflow.com/questions/2302550/bitblt-code-not-working
+
+
 SharpDX
 http://sharpdx.org/
 

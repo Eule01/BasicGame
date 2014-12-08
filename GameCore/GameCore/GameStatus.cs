@@ -21,7 +21,7 @@ namespace GameCore
         internal List<GameObject> GameObjects;
 
 
-        internal GameObject ThePlayer;
+        internal ObjectPlayer ThePlayer;
 
         /// <summary>
         ///     The millisecond run from start for this status.
@@ -43,7 +43,7 @@ namespace GameCore
         internal static GameStatus CreatTestGame()
         {
             GameStatus tempGameStatus = new GameStatus {TheMap = Map.Map.GetTestMap()};
-            GameObject tempPlayer = new GameObject(GameObject.ObjcetIds.Player) {Location = new Vector(10.3, 5.6)};
+            ObjectPlayer tempPlayer = new ObjectPlayer(GameObject.ObjcetIds.Player) { Location = new Vector(10.3, 5.6) };
             tempGameStatus.ThePlayer = tempPlayer;
             tempGameStatus.GameObjects.Add(tempPlayer);
             return tempGameStatus;

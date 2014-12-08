@@ -19,7 +19,7 @@ namespace GameCore.Render
         /// <summary>
         ///     The renderer time interval in milliseconds.
         /// </summary>
-        private const int refreshIntervalMs = 50;
+        private const int refreshIntervalMs = 33;
 
 
         private float zoomFactor = 20.0f;
@@ -69,9 +69,6 @@ namespace GameCore.Render
                 });
         }
 
-        protected abstract void DrawTile(Tile aTile, Vector vector);
-        protected abstract void DrawGameObject(GameObject aGameObject);
-
         private void ZoomChanged()
         {
             oneOverZoomFactor = 1.0f/zoomFactor;
@@ -111,7 +108,7 @@ namespace GameCore.Render
 
         public void DrawGame()
         {
-            DrawMap();
+            DrawMap(theGameStatus.TheMap);
             DrawGameObjects();
         }
 
@@ -123,15 +120,24 @@ namespace GameCore.Render
             }
         }
 
-        private void DrawMap()
+        protected virtual void DrawTile(Tile aTile, Vector vector)
         {
-            Map.Map tempMap = theGameStatus.TheMap;
-            Size tempMapSize = tempMap.TheSize;
+            
+        }
+
+        protected virtual void DrawGameObject(GameObject aGameObject)
+        {
+            
+        }
+
+        protected virtual void DrawMap(Map.Map aMap)
+        {
+            Size tempMapSize = aMap.TheSize;
             for (int x = 0; x < tempMapSize.Width; x++)
             {
                 for (int y = 0; y < tempMapSize.Height; y++)
                 {
-                    Tile aTile = tempMap[x, y];
+                    Tile aTile = aMap[x, y];
                     DrawTile(aTile, new Vector(x, y));
                 }
             }

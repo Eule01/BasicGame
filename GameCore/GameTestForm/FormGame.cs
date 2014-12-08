@@ -27,7 +27,11 @@ namespace GameTestForm
         {
             Text = "Game Test Form";
             KeyPreview = true;
-            DoubleBuffered = true;
+//            DoubleBuffered = true;
+//
+//            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+//            SetStyle(ControlStyles.UserPaint, true);
+//            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
             theGameCore = new GameCore.GameCore();
             theGameCore.TheRenderer = new RendererGdi(theGameCore.TheGameStatus);

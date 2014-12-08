@@ -54,14 +54,21 @@ namespace GameCore.Engine
         /// </summary>
         private void GameTick()
         {
-            GameObject thePlayer = GameCore.TheGameCore.TheGameStatus.ThePlayer;
+            ObjectPlayer thePlayer = GameCore.TheGameCore.TheGameStatus.ThePlayer;
             if (theUserInput.Forward)
             {
-                thePlayer.Location += new Vector(0.01f, 0);
+                thePlayer.Location += thePlayer.Orientation*0.1f;
             }
             else if (theUserInput.Backward)
             {
-                thePlayer.Location += new Vector(-0.01f, 0);
+                thePlayer.Location -= thePlayer.Orientation*0.1f;
+            }
+            if (!theUserInput.MousePosition.IsEmpty)
+            {
+                Vector gameMousePos = GameCore.TheGameCore.TheRenderer.DisplayToGame(theUserInput.MousePosition);
+                Vector playerMouseVec = gameMousePos - thePlayer.Location;
+                playerMouseVec.Normalize();
+                thePlayer.Orientation = playerMouseVec;
             }
         }
 

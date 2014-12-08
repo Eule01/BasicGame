@@ -33,6 +33,15 @@ namespace GameCore.Utils
             get { return (float) Math.Sqrt(X*X + Y*Y); }
         }
 
+        /// <summary>
+        /// Returns the angle of the vector in RAD.
+        /// </summary>
+        public float Angle
+        {
+            get { return (float)Math.Atan2(Y, X); }
+        }
+
+
         public static Vector FromPoint(Point p)
         {
             return FromPoint(p.X, p.Y);

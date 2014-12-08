@@ -13,11 +13,8 @@ using GameCore.Utils;
 
 namespace GameCore.Render
 {
-    public class RendererGdi : Renderer
+    public class RendererGdi : RendererGdiBase
     {
-        public Graphics TheGraphics;
-
-        public Control TheRenderControl;
 
         private readonly SolidBrush desertBrush = new SolidBrush(Color.Wheat);
         private readonly SolidBrush grassBrush = new SolidBrush(Color.Green);
@@ -30,15 +27,6 @@ namespace GameCore.Render
 
         public RendererGdi(GameStatus aGameStatus) : base(aGameStatus)
         {
-        }
-
-
-        protected override void UpdateRender()
-        {
-            if (TheRenderControl != null)
-            {
-                Async.UI(delegate { TheRenderControl.Refresh(); }, TheRenderControl, false);
-            }
         }
 
         protected override void DrawTile(Tile aTile, Vector atLocation)
