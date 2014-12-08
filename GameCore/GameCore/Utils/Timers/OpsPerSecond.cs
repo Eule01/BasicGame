@@ -113,5 +113,6 @@ namespace GameCore.Utils.Timers
         {
             missedFrames++;
         }
+
     }
 }

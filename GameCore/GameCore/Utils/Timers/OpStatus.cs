@@ -20,6 +20,11 @@
             this.name = aName;
         }
 
+        public string Name
+        {
+            get { return name; }
+        }
+
         public double Ops
         {
             get { return ops; }

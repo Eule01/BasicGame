@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using GameCore;
 using GameCore.Interface;
 using GameCore.Render;
+using GameCore.UserControls;
 
 #endregion
 
@@ -16,6 +17,8 @@ namespace GameTestForm
         private UserControlMainGame theControlMainGame;
         private GameCore.GameCore theGameCore;
         private UserInput theUserInput;
+
+        private FormFpsStatus formTempStatus;
 
         public FormGame()
         {
@@ -46,11 +49,30 @@ namespace GameTestForm
         private void TheGameCoreOnTheGameEventHandler(object sender, GameEventArgs args)
         {
             Console.WriteLine(args.ToString());
+            switch (args.TheType)
+            {
+                case GameEventArgs.Types.Status:
+                    if (formTempStatus != null && formTempStatus.Visible && args.TheOpStatus != null &&
+                        args.TheOpStatus.Name == "Renderer")
+                    {
+                        formTempStatus.TheStatusStringDelegate(args.TheOpStatus);
+                    }
+                    break;
+                case GameEventArgs.Types.Message:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         protected override void OnLoad(EventArgs e)
         {
+            formTempStatus = new FormFpsStatus();
+            formTempStatus.Show();
+
             theGameCore.Start();
+
+
             base.OnLoad(e);
         }
 
@@ -138,6 +160,5 @@ namespace GameTestForm
 
             return base.ProcessKeyPreview(ref m);
         }
-
     }
 }

@@ -55,6 +55,12 @@
     <Compile Include="Render\RendererGdi.cs" />
     <Compile Include="Render\RendererGdi2.cs" />
     <Compile Include="Render\RendererGdiBase.cs" />
+    <Compile Include="UserControls\FormFpsStatus.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserControls\FormFpsStatus.Designer.cs">
+      <DependentUpon>FormFpsStatus.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utils\BitmapHelper.cs" />
     <Compile Include="Utils\Timers\AccurateStopWatch.cs" />
     <Compile Include="Utils\Timers\FastTimer.cs" />
@@ -71,6 +77,12 @@
       <Project>{18BCA4A3-F860-4558-9EB7-0C7FECDBD3BE}</Project>
       <Name>Async</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="UserControls\FormFpsStatus.resx">
+      <DependentUpon>FormFpsStatus.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

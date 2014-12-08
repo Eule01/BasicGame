@@ -26,6 +26,11 @@ namespace GameCore
             this.theType = theType;
         }
 
+        public Types TheType
+        {
+            get { return theType; }
+        }
+
         public override string ToString()
         {
             string outStr = "";
