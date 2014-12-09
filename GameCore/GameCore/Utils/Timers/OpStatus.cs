@@ -7,6 +7,8 @@
         public const string TEXT_MISSED_FRAMES = "Missed frames: ";
         public const string TEXT_MAX_TIME = "Max time: ";
         public const string TEXT_INTERVAL_MAX_TIME = "Int. max time: ";
+        public const string TEXT_LOAD = "Load: ";
+        public const string TEXT_Name = "Name: ";
 
         private float ops = 0.0f;
         private float avrOpTime = 0.0f;

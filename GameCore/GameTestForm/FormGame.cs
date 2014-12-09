@@ -52,8 +52,7 @@ namespace GameTestForm
             switch (args.TheType)
             {
                 case GameEventArgs.Types.Status:
-                    if (formTempStatus != null && formTempStatus.Visible && args.TheOpStatus != null &&
-                        args.TheOpStatus.Name == "Renderer")
+                    if (formTempStatus != null && formTempStatus.Visible && args.TheOpStatus != null )
                     {
                         formTempStatus.TheStatusStringDelegate(args.TheOpStatus);
                     }
@@ -76,10 +75,20 @@ namespace GameTestForm
             base.OnLoad(e);
         }
 
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+
+            theGameCore.Close();
+
+//            e.Cancel = true;
+            base.OnFormClosing(e);
+          
+
+        }
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            theGameCore.Close();
+            base.OnClosing(e);
         }
 
         private const Keys KEY_FORWARD = Keys.W;

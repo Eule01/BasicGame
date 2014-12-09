@@ -61,14 +61,22 @@
     <Compile Include="UserControls\FormFpsStatus.Designer.cs">
       <DependentUpon>FormFpsStatus.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\UserControlFpsStatus.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\UserControlFpsStatus.Designer.cs">
+      <DependentUpon>UserControlFpsStatus.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utils\BitmapHelper.cs" />
     <Compile Include="Utils\Timers\AccurateStopWatch.cs" />
     <Compile Include="Utils\Timers\FastTimer.cs" />
     <Compile Include="Utils\RandomNumGen.cs" />
     <Compile Include="Utils\Timers\IFlowControl.cs" />
+    <Compile Include="Utils\Timers\ITickEngine.cs" />
     <Compile Include="Utils\Timers\OpsPerSecond.cs" />
     <Compile Include="Utils\Timers\OpStatus.cs" />
     <Compile Include="Utils\Timers\TickEngine.cs" />
+    <Compile Include="Utils\Timers\TickEngineThread.cs" />
     <Compile Include="Utils\Timers\TimerBase.cs" />
     <Compile Include="Utils\Vector.cs" />
   </ItemGroup>
@@ -82,6 +90,9 @@
   <ItemGroup>
     <EmbeddedResource Include="UserControls\FormFpsStatus.resx">
       <DependentUpon>FormFpsStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\UserControlFpsStatus.resx">
+      <DependentUpon>UserControlFpsStatus.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

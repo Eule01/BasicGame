@@ -3,7 +3,7 @@
     public delegate void TickEventDelegate();
 
 
-    public class TickEngine : IFlowControl
+    public class TickEngine : ITickEngine
     {
         private string name;
 
@@ -36,7 +36,7 @@
 
         private bool doingWork = false;
 
-        public TickEngine(string aName,TickEventDelegate aTickEventDelegate, StatusStringDelegate aStatusEventDelegate,
+        public void Setup(string aName, TickEventDelegate aTickEventDelegate, StatusStringDelegate aStatusEventDelegate,
                           int aTimerTickIntervalMs)
         {
             name = aName;
@@ -57,6 +57,46 @@
         }
 
         #region Timer
+
+        /// <summary>
+        ///     Starts the game.
+        /// </summary>
+        public void Start()
+        {
+            framesPerSecond.Start();
+            theTimer.Start();
+            paused = false;
+        }
+
+        /// <summary>
+        ///     Shuts down the game.
+        /// </summary>
+        public virtual void Close()
+        {
+            theTimer.Stop();
+            paused = true;
+
+            framesPerSecond.Stop();
+            framesPerSecond.StatusStringDelegate = null;
+        }
+
+        /// <summary>
+        ///     Pauses the game.
+        /// </summary>
+        public void Pause()
+        {
+            theTimer.Pause();
+            paused = true;
+        }
+
+        /// <summary>
+        ///     Resumes the game.
+        /// </summary>
+        public void Resume()
+        {
+            theTimer.Start();
+            paused = false;
+        }
 
         /// <summary>
         ///     Here all the game action is computed. This is called every timerTickIntervalMs
@@ -80,52 +120,6 @@
             }
         }
 
-
-        /// <summary>
-        ///     Starts the game.
-        /// </summary>
-        public void Start()
-        {
-            framesPerSecond.Start();
-            theTimer.Start();
-            paused = false;
-        }
-
-        /// <summary>
-        ///     Shuts down the game.
-        /// </summary>
-        public void Close()
-        {
-            theTimer.Stop();
-            paused = true;
-
-
-            framesPerSecond.Stop();
-            framesPerSecond.StatusStringDelegate = null;
-        }
-
-        /// <summary>
-        ///     Pauses the game.
-        /// </summary>
-        public void Pause()
-        {
-            theTimer.Pause();
-            paused = true;
-        }
-
-
-        /// <summary>
-        ///     Resumes the game.
-        /// </summary>
-        public void Resume()
-        {
-            theTimer.Start();
-            paused = false;
-        }
-
         #endregion
-
-
- 
     }
 }

@@ -1,7 +1,10 @@
 ﻿namespace GameCore.Utils.Timers
 {
-    public interface IFlowControl
+    public interface ITickEngine : IFlowControl
     {
+        void Setup(string aName, TickEventDelegate aTickEventDelegate, StatusStringDelegate aStatusEventDelegate,
+                   int aTimerTickIntervalMs);
+
         /// <summary>
         ///     Starts the game.
         /// </summary>
@@ -22,7 +25,4 @@
         /// </summary>
         void Resume();
     }
-
-
-
 }

@@ -1,23 +1,47 @@
-﻿using System.Drawing;
+﻿#region
+
+using System.Drawing;
 using System.Windows.Forms;
-using CodeToast;
+
+#endregion
 
 namespace GameCore.Render
 {
     public class RendererGdiBase : Renderer
     {
+        public delegate void RefreshControlDel();
+
         public Graphics TheGraphics;
-        public Control TheRenderControl;
+        private Control theRenderControl;
+        private RefreshControlDel myDelegate;
 
         public RendererGdiBase(GameStatus aGameStatus) : base(aGameStatus)
         {
         }
 
+
+        public Control TheRenderControl
+        {
+            get { return theRenderControl; }
+            set { theRenderControl = value;
+            myDelegate = new RefreshControlDel(TheRenderControl.Refresh);
+            }
+        }
+
         protected override void UpdateRender()
         {
-            if (TheRenderControl != null)
+            if (TheRenderControl != null && !TheRenderControl.Disposing)
             {
-                Async.UI(delegate { TheRenderControl.Refresh(); }, TheRenderControl, false);
+ 
+                if (TheRenderControl.InvokeRequired)
+                {
+                    TheRenderControl.Invoke(myDelegate);
+                }
+                else
+                {
+                    TheRenderControl.Refresh();
+                }
+//                Async.UI(delegate { TheRenderControl.Refresh(); }, TheRenderControl, false);
             }
         }
     }

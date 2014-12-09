@@ -14,12 +14,13 @@ namespace GameCore.Render
     {
         private readonly GameStatus theGameStatus;
 
-        private TickEngine theTickEngine;
+        private ITickEngine theTickEngine;
 
         /// <summary>
         ///     The renderer time interval in milliseconds.
         /// </summary>
-        private const int refreshIntervalMs = 33;
+//        private const int refreshIntervalMs = 33;
+        private const int refreshIntervalMs = 5;
 
 
         private float zoomFactor = 20.0f;
@@ -45,7 +46,8 @@ namespace GameCore.Render
         private void Init()
         {
             ZoomChanged();
-            theTickEngine = new TickEngine("Renderer", UpdateRender, StatusTick, refreshIntervalMs);
+            theTickEngine = new TickEngineThread();
+            theTickEngine.Setup("Renderer", UpdateRender, StatusTick, refreshIntervalMs);
             theTickEngine.Start();
         }
 

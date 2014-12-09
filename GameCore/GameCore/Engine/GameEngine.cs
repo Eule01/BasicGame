@@ -11,7 +11,7 @@ namespace GameCore.Engine
 {
     public class GameEngine : IFlowControl
     {
-        private TickEngine theTickEngine;
+        private ITickEngine theTickEngine;
 
         /// <summary>
         ///     The gamer time interval in milliseconds.
@@ -31,7 +31,8 @@ namespace GameCore.Engine
         private void Init()
         {
             theUserInput = new UserInput();
-            theTickEngine = new TickEngine("GameEngine", GameTick, StatusTick, timerTickIntervalMs);
+            theTickEngine = new TickEngineThread();
+            theTickEngine.Setup("GameEngine", GameTick, StatusTick, timerTickIntervalMs);
         }
 
         public UserInput TheUserInput
