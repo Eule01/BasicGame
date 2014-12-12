@@ -11,6 +11,11 @@ Kiln
 http://www.fogcreek.com/
 
 
+Game Development:
+http://www.codeproject.com/Articles/564534/Migration-Strategy-Game
+http://www.codeproject.com/Articles/486285/XNAplustoplusMonoGameplusandplusbeyond
+
+
 Rendering:
 
 GDI
@@ -51,4 +56,53 @@ http://blogs.msdn.com/b/davrous/archive/2013/06/13/tutorial-series-learning-how-
 
 
 OpenGL:
+https://www.opengl.org/wiki/Main_Page
+https://www.opengl.org/sdk/docs/man4/
 
+
+Tutorials:
+http://www.codeproject.com/Articles/771225/Learning-Modern-OpenGL
+
+
+SharpGL:
+http://sharpgl.codeplex.com/
+https://github.com/dwmkerr/sharpgl
+
+Tutorials:
+
+
+OpenTK:
+http://www.opentk.com/project/opentk
+http://sourceforge.net/projects/opentk/
+http://www.opentk.com/files/doc/class_open_t_k_1_1_game_window.html
+
+Tutorials:
+http://www.opentk.com/doc
+http://www.codeproject.com/Articles/138452/An-Analog-Clock-Design-Using-OpenTK-in-Csharp
+http://www.codeproject.com/Articles/839389/Point-Cloud-utility-with-Csharp-and-OpenGL
+http://50gigsoftextfiles.blogspot.co.nz/2013/07/nehe-opengl-tuts-in-c-opentk-1.html
+http://nehe.gamedev.net/news/collision_detection_lesson_ported_to_opentk/570036/
+http://neokabuto.blogspot.co.nz/2014/02/minor-tutorial-update.html
+
+https://github.com/lusid/OpenTK-Course
+
+
+
+http://www.opentk.com/project/Yask
+OpenGL4Sharp:
+https://github.com/giawa/opengl4csharp
+
+Tutorials:
+https://www.youtube.com/watch?v=2KEHrB82Z2M
+https://www.youtube.com/watch?v=xNGmQ6lO6NY
+https://github.com/giawa/opengl4tutorials
+
+
+
+
+http://www.codeproject.com/Articles/749543/OpenGL-in-NET-Getting-Started
+https://www.opengl.org/wiki/Language_bindings#C.23
+
+Tutorial:
+http://nehe.gamedev.net/tutorial/lessons_01__05/22004/
+http://nehe.gamedev.net/

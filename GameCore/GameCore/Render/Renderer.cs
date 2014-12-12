@@ -19,8 +19,8 @@ namespace GameCore.Render
         /// <summary>
         ///     The renderer time interval in milliseconds.
         /// </summary>
-//        private const int refreshIntervalMs = 33;
-        private const int refreshIntervalMs = 5;
+        private const int refreshIntervalMs = 33;
+//        private const int refreshIntervalMs = 5;
 
 
         private float zoomFactor = 20.0f;
@@ -124,12 +124,10 @@ namespace GameCore.Render
 
         protected virtual void DrawTile(Tile aTile, Vector vector)
         {
-            
         }
 
         protected virtual void DrawGameObject(GameObject aGameObject)
         {
-            
         }
 
         protected virtual void DrawMap(Map.Map aMap)

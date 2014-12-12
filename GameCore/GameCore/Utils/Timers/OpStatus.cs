@@ -2,13 +2,13 @@
 {
     public class OpStatus
     {
-        public const string TEXT_FPS = "FPS: ";
+        public const string TEXT_FPS = "FPS: {0:0.0}Hz";
         public const string TEXT_AVR_TIME = "Avr. time: ";
-        public const string TEXT_MISSED_FRAMES = "Missed frames: ";
+        public const string TEXT_MISSED_FRAMES = "Missed frames: {0}";
         public const string TEXT_MAX_TIME = "Max time: ";
         public const string TEXT_INTERVAL_MAX_TIME = "Int. max time: ";
-        public const string TEXT_LOAD = "Load: ";
-        public const string TEXT_Name = "Name: ";
+        public const string TEXT_LOAD = "Load: {0:0.00}%";
+        public const string TEXT_Name = "Name: {0}";
 
         private float ops = 0.0f;
         private float avrOpTime = 0.0f;
