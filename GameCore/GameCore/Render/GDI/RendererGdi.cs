@@ -11,11 +11,10 @@ using GameCore.Utils;
 
 #endregion
 
-namespace GameCore.Render
+namespace GameCore.Render.GDI
 {
     public class RendererGdi : RendererGdiBase
     {
-
         private readonly SolidBrush desertBrush = new SolidBrush(Color.Wheat);
         private readonly SolidBrush grassBrush = new SolidBrush(Color.Green);
         private readonly SolidBrush roadtBrush = new SolidBrush(Color.DarkSlateGray);
@@ -25,8 +24,15 @@ namespace GameCore.Render
 
         private readonly Pen tilePen = Pens.Black;
 
-        public RendererGdi(GameStatus aGameStatus) : base(aGameStatus)
+ 
+        public RendererGdi() : base()
         {
+            name = "RendererGdi";
+        }
+
+        public override void Start()
+        {
+            base.Start();
         }
 
         protected override void DrawTile(Tile aTile, Vector atLocation)

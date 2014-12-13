@@ -18,7 +18,9 @@ namespace GameCore
 
         private GameEngine theGameEngine;
 
-        private Renderer theRenderer;
+        private RendererBase theRenderer;
+
+        private RendererManager theRendererManager;
 
         /// <summary>
         ///     This is holding the game core so it can be seen from all other classes. This is not best practice I guess.
@@ -35,7 +37,9 @@ namespace GameCore
             TheGameEventHandler += GameCore_TheGameEventHandler;
             TheGameCore = this;
             theGameEngine = new GameEngine();
-//            theGameStatus = new GameStatus();
+            theRendererManager = new RendererManager();
+
+//            TheGameStatus = new GameStatus();
             theGameStatus = GameStatus.CreatTestGame();
         }
 
@@ -44,7 +48,12 @@ namespace GameCore
             get { return theGameStatus; }
         }
 
-        public Renderer TheRenderer
+        public RendererManager TheRendererManager
+        {
+            get { return theRendererManager; }
+        }
+
+        public RendererBase TheRenderer
         {
             get { return theRenderer; }
             set { theRenderer = value; }
@@ -73,6 +82,15 @@ namespace GameCore
         public void Start()
         {
             theGameEngine.Start();
+            ChangeRenderer(0);
+        }
+
+        public void ChangeRenderer(int aRendererIndex)
+        {
+            theGameEngine.Pause();
+            theRendererManager.SetRenderer(aRendererIndex, theGameStatus, TheUserInput);
+            theRenderer = theRendererManager.TheRenderer;
+            theGameEngine.Resume();
         }
 
 
@@ -89,7 +107,8 @@ namespace GameCore
         public void Close()
         {
             theGameEngine.Close();
-            theRenderer.Close();
+            theRendererManager.Close();
+//            theRenderer.Close();
             theGameStatus.Close();
         }
 

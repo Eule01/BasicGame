@@ -66,7 +66,7 @@ namespace GameCore.Engine
             }
             if (!theUserInput.MousePosition.IsEmpty)
             {
-                Vector gameMousePos = GameCore.TheGameCore.TheRenderer.DisplayToGame(theUserInput.MousePosition);
+                Vector gameMousePos = theUserInput.MousePosition;
                 Vector playerMouseVec = gameMousePos - thePlayer.Location;
                 playerMouseVec.Normalize();
                 thePlayer.Orientation = playerMouseVec;

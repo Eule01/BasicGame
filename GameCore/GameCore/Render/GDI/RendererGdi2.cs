@@ -8,7 +8,7 @@ using GameCore.Utils;
 
 #endregion
 
-namespace GameCore.Render
+namespace GameCore.Render.GDI
 {
     public class RendererGdi2 : RendererGdiBase
     {
@@ -28,10 +28,12 @@ namespace GameCore.Render
 
         private static Size TileSize;
 
-        public RendererGdi2(GameStatus aGameStatus)
-            : base(aGameStatus)
+        public RendererGdi2()
+            : base()
         {
-            TileSize = new Size((int) DispTileSize.X, (int) DispTileSize.Y);
+            name = "RendererGdi2";
+//            TileSize = new Size((int) DispTileSize.X, (int) DispTileSize.Y);
+            TileSize = new Size((int)GameToDisplaySize(DispTileSize).X, (int)GameToDisplaySize(DispTileSize).Y); 
 
             BmpDesert = BitmapHelper.CreatBitamp(TileSize, desertBrush);
             BmpGrass = BitmapHelper.CreatBitamp(TileSize, grassBrush);

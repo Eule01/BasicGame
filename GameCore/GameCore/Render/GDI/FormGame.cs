@@ -3,28 +3,32 @@
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
-using GameCore;
 using GameCore.Interface;
-using GameCore.Render.GDI;
 using GameCore.UserControls;
 
 #endregion
 
-namespace GameTestForm
+namespace GameCore.Render.GDI
 {
     public partial class FormGame : Form
     {
-        private GameCore.Render.GDI.UserControlMainGame theControlMainGame;
-        private global::GameCore.GameCore theGameCore;
+        private UserControlMainGame theControlMainGame;
+        private GameCore theGameCore;
         private UserInput theUserInput;
-
-        private FormFpsStatus formTempStatus;
 
         public FormGame()
         {
             InitializeComponent();
             Init();
         }
+
+        public FormGame(GameCore theGameCore)
+        {
+            this.theGameCore = theGameCore;
+            InitializeComponent();
+            Init();
+        }
+
 
         private void Init()
         {
@@ -36,41 +40,22 @@ namespace GameTestForm
 //            SetStyle(ControlStyles.UserPaint, true);
 //            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
-            theGameCore = new global::GameCore.GameCore();
-            theGameCore.TheRenderer = new RendererGdi2 {TheGameStatus = theGameCore.TheGameStatus};
-            theGameCore.TheRenderer.Start();
+//            theGameCore = new GameCore();
+//            theGameCore.TheRenderer = new RendererGdi {TheGameStatus = theGameCore.TheGameStatus};
+//            theGameCore.TheRenderer.Start();
             theUserInput = theGameCore.TheUserInput;
-            theGameCore.TheGameEventHandler += TheGameCoreOnTheGameEventHandler;
 
 
-            theControlMainGame = new GameCore.Render.GDI.UserControlMainGame(theGameCore) {Dock = DockStyle.Fill};
+            theControlMainGame = new UserControlMainGame(theGameCore) {Dock = DockStyle.Fill};
             Controls.Add(theControlMainGame);
         }
 
-        private void TheGameCoreOnTheGameEventHandler(object sender, GameEventArgs args)
-        {
-            Console.WriteLine(args.ToString());
-            switch (args.TheType)
-            {
-                case GameEventArgs.Types.Status:
-                    if (formTempStatus != null && formTempStatus.Visible && args.TheOpStatus != null)
-                    {
-                        formTempStatus.TheStatusStringDelegate(args.TheOpStatus);
-                    }
-                    break;
-                case GameEventArgs.Types.Message:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
+      
 
         protected override void OnLoad(EventArgs e)
         {
-            formTempStatus = new FormFpsStatus();
-            formTempStatus.Show();
 
-            theGameCore.Start();
+//            theGameCore.Start();
 
 
             base.OnLoad(e);
@@ -78,7 +63,7 @@ namespace GameTestForm
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            theGameCore.Close();
+//            theGameCore.Close();
 
 //            e.Cancel = true;
             base.OnFormClosing(e);

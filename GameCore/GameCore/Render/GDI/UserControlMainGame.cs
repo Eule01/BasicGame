@@ -3,16 +3,14 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GameCore.Interface;
-using GameCore.Render;
-using GameCore.Render.GDI;
 
 #endregion
 
-namespace GameTestForm
+namespace GameCore.Render.GDI
 {
     public partial class UserControlMainGame : UserControl
     {
-        private GameCore.GameCore theGameCore;
+        private GameCore theGameCore;
         private RendererGdiBase theRenderer;
         private UserInput theUserInput;
 
@@ -22,11 +20,11 @@ namespace GameTestForm
             Init();
         }
 
-        public UserControlMainGame(GameCore.GameCore aGameCore)
+        public UserControlMainGame(GameCore aGameCore)
         {
             theGameCore = aGameCore;
             theUserInput = theGameCore.TheUserInput;
-            theRenderer = (RendererGdiBase) aGameCore.TheRenderer;
+            theRenderer = (RendererGdiBase) aGameCore.TheRendererManager.TheRenderer;
             theRenderer.TheRenderControl = this;
             Init();
         }

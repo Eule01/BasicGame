@@ -16,6 +16,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Info.txt = Info.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenGL", "..\..\opengl4csharp.git\OpenGL\OpenGL.csproj", "{4A3D3106-AFEC-4E04-9630-7A1A2D0C16DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameController", "GameController\GameController.csproj", "{A8AB98BB-6707-4990-888F-E945CC95619B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,11 +42,20 @@ Global
 		{18BCA4A3-F860-4558-9EB7-0C7FECDBD3BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18BCA4A3-F860-4558-9EB7-0C7FECDBD3BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18BCA4A3-F860-4558-9EB7-0C7FECDBD3BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A3D3106-AFEC-4E04-9630-7A1A2D0C16DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A3D3106-AFEC-4E04-9630-7A1A2D0C16DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A3D3106-AFEC-4E04-9630-7A1A2D0C16DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A3D3106-AFEC-4E04-9630-7A1A2D0C16DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8AB98BB-6707-4990-888F-E945CC95619B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8AB98BB-6707-4990-888F-E945CC95619B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8AB98BB-6707-4990-888F-E945CC95619B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8AB98BB-6707-4990-888F-E945CC95619B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{18BCA4A3-F860-4558-9EB7-0C7FECDBD3BE} = {AF8B004D-CA47-4059-9C6A-D40A0543DA07}
+		{4A3D3106-AFEC-4E04-9630-7A1A2D0C16DB} = {AF8B004D-CA47-4059-9C6A-D40A0543DA07}
 	EndGlobalSection
 EndGlobal

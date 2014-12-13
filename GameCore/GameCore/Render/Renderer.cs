@@ -10,9 +10,8 @@ using GameCore.Utils.Timers;
 
 namespace GameCore.Render
 {
-    public abstract class Renderer
+    public abstract class Renderer : RendererBase
     {
-        private readonly GameStatus theGameStatus;
 
         private ITickEngine theTickEngine;
 
@@ -28,19 +27,12 @@ namespace GameCore.Render
 
         private Vector origin = new Vector(0, 0);
 
-        internal Vector DispTileSize;
+        internal Vector DispTileSize = new Vector(1,1);
 
 
-        protected Renderer()
+        protected Renderer() : base()
         {
-            Init();
-        }
-
-
-        public Renderer(GameStatus aGameStatus)
-        {
-            theGameStatus = aGameStatus;
-            Init();
+            name = "Renderer";
         }
 
         private void Init()
@@ -51,17 +43,21 @@ namespace GameCore.Render
             theTickEngine.Start();
         }
 
-        public void Close()
-        {
-            theTickEngine.Close();
-        }
-
 
         /// <summary>
         ///     Here all the game action is computed. This is called every refreshIntervalMs
         /// </summary>
         protected abstract void UpdateRender();
 
+        public override void Close()
+        {
+            theTickEngine.Close();
+        }
+
+        public override void Start()
+        {
+            Init();
+        }
 
         private void StatusTick(OpStatus opstatus)
         {
@@ -85,7 +81,7 @@ namespace GameCore.Render
             return disVec;
         }
 
-        internal Vector DisplayToGame(Vector aDisVector)
+        public Vector DisplayToGame(Vector aDisVector)
         {
             Vector gameVec = aDisVector*oneOverZoomFactor - origin;
             return gameVec;
@@ -110,13 +106,13 @@ namespace GameCore.Render
 
         public void DrawGame()
         {
-            DrawMap(theGameStatus.TheMap);
+            DrawMap(TheGameStatus.TheMap);
             DrawGameObjects();
         }
 
         private void DrawGameObjects()
         {
-            foreach (GameObject aGameObject in theGameStatus.GameObjects)
+            foreach (GameObject aGameObject in TheGameStatus.GameObjects)
             {
                 DrawGameObject(aGameObject);
             }
