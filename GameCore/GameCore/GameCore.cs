@@ -82,7 +82,7 @@ namespace GameCore
         public void Start()
         {
             theGameEngine.Start();
-            ChangeRenderer(0);
+            ChangeRenderer(2);
         }
 
         public void ChangeRenderer(int aRendererIndex)

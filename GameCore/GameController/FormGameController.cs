@@ -37,7 +37,7 @@ namespace GameController
             formTempStatus.Show();
 
             comboBoxRenderers.Items.AddRange(items: theGameCore.TheRendererManager.TheRenderers.ToArray());
-            comboBoxRenderers.SelectedIndex = 0;
+            comboBoxRenderers.SelectedIndex = 2;
             comboBoxRenderers.SelectedIndexChanged += comboBoxRenderers_SelectedIndexChanged;
 
 

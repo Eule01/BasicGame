@@ -63,6 +63,15 @@ https://www.opengl.org/sdk/docs/man4/
 Tutorials:
 http://www.codeproject.com/Articles/771225/Learning-Modern-OpenGL
 
+GLUT:
+http://www.lighthouse3d.com/tutorials/glut-tutorial/
+
+http://www.codeproject.com/Articles/23778/OpenGL-D-Navigation-With-Tao-and-C-Tao-OpenGL-Ta
+http://www.codeproject.com/Articles/23840/OpenGL-One-Window-Views-With-Tao-and-C-Multiple
+
+Mouse coordinates into world coordinates
+https://sites.google.com/site/vamsikrishnav/gluunproject
+
 
 SharpGL:
 http://sharpgl.codeplex.com/

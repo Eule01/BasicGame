@@ -64,6 +64,14 @@ namespace GameCore.Engine
             {
                 thePlayer.Location -= thePlayer.Orientation*0.1f;
             }
+            if (theUserInput.Right)
+            {
+                thePlayer.Location += (thePlayer.Orientation.Perpendicular())*0.1f;
+            }
+            else if (theUserInput.Left)
+            {
+                thePlayer.Location -= (thePlayer.Orientation.Perpendicular()) * 0.1f;
+            }
             if (!theUserInput.MousePosition.IsEmpty)
             {
                 Vector gameMousePos = theUserInput.MousePosition;

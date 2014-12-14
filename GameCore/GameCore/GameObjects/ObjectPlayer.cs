@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿#region
+
 using GameCore.Utils;
+
+#endregion
 
 namespace GameCore.GameObjects
 {
@@ -11,12 +10,21 @@ namespace GameCore.GameObjects
     {
         public ObjectPlayer(ObjcetIds aObjectId) : base(aObjectId)
         {
-
         }
 
         /// <summary>
-        /// The orientation of the player given by a vector.
+        ///     The orientation of the player given by a vector.
         /// </summary>
-        public Vector Orientation = new Vector(1.0f,0.0f);
+        private Vector orientation = new Vector(1.0f, 0.0f);
+
+        public Vector Orientation
+        {
+            get { return orientation; }
+            set
+            {
+                orientation = value;
+                changed = true;
+            }
+        }
     }
 }

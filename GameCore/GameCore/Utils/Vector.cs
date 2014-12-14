@@ -218,7 +218,7 @@ namespace GameCore.Utils
 
         public override string ToString()
         {
-            return "(" + Math.Round(X,2) + ", " + (int)Math.Round(Y,2) + ")";
+            return "(" + Math.Round(X,3) + ", " + (int)Math.Round(Y,3) + ")";
         }
 
         public string ToString(bool rounded)

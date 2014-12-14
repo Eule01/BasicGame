@@ -17,6 +17,11 @@ namespace GameCore.Interface
         /// </summary>
         public bool Backward;
 
+        public bool Right;
+
+        public bool Left;
+
+
 
         public PointF MousePosition;
     }

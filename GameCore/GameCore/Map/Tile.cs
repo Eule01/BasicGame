@@ -1,4 +1,11 @@
-﻿using GameCore.Utils;
+﻿#region
+
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using GameCore.Utils;
+
+#endregion
 
 namespace GameCore.Map
 {
@@ -14,7 +21,7 @@ namespace GameCore.Map
             Road
         }
 
-        public static Vector Size = new Vector(1,1);
+        public static Vector Size = new Vector(1, 1);
 
         private TileIds theTileId = TileIds.Desert;
 
@@ -23,9 +30,40 @@ namespace GameCore.Map
             theTileId = aTileId;
         }
 
+        public Vector Location = new Vector(0, 0);
+
         public TileIds TheTileId
         {
             get { return theTileId; }
+        }
+
+
+        public static Dictionary<TileIds, TileType> GetTileTypes()
+        {
+            Dictionary<TileIds, TileType> tempList = new Dictionary<TileIds, TileType>();
+
+            foreach (TileIds aTileType in (TileIds[]) Enum.GetValues(typeof (TileIds)))
+            {
+                TileType tempType = new TileType(aTileType.ToString());
+                switch (aTileType)
+                {
+                    case TileIds.Desert:
+                        tempType.Color = Color.Wheat;
+                        break;
+                    case TileIds.Grass:
+                        tempType.Color = Color.Green;
+                        break;
+                    case TileIds.Road:
+                        tempType.Color = Color.DarkSlateGray;
+                        break;
+                    default:
+                        tempType.Color = Color.Gray;
+                        break;
+                }
+                tempList.Add(aTileType, tempType);
+            }
+
+            return tempList;
         }
     }
 }
