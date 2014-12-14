@@ -18,6 +18,11 @@ http://www.codeproject.com/Articles/486285/XNAplustoplusMonoGameplusandplusbeyon
 
 Rendering:
 
+Texture
+http://www.codeproject.com/Articles/838511/Procedural-seamless-noise-texture-generator
+
+
+
 GDI
 
 http://www.codeproject.com/Tips/66909/Rendering-fast-with-GDI-What-to-do-and-what-not-to
