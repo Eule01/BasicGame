@@ -14,7 +14,18 @@ http://www.fogcreek.com/
 Game Development:
 http://www.codeproject.com/Articles/564534/Migration-Strategy-Game
 http://www.codeproject.com/Articles/486285/XNAplustoplusMonoGameplusandplusbeyond
+http://www.codeproject.com/Articles/25940/Game-Programming-Two
 
+
+
+3D game development:
+http://www.codeproject.com/Articles/246542/Ten-Things-to-Achieve-When-Starting-D-Programming
+http://www.codeproject.com/Articles/23739/OpenGL-D-Navigation-with-Tao-and-C
+http://www.codeproject.com/Articles/26166/D-Map-Editor
+
+Camera:
+http://en.wikipedia.org/wiki/Virtual_camera_system
+http://www.codeproject.com/Articles/577259/D-solar-system-with-OpenGL-and-Csharp
 
 Rendering:
 
