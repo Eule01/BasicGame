@@ -41,7 +41,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Tao.FreeGlut">
-      <HintPath>..\..\..\opengl4csharp.git\OpenGL\libs\Tao.FreeGlut.dll</HintPath>
+      <HintPath>.\Tao.FreeGlut.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -109,8 +109,8 @@
     <Compile Include="Utils\Vector.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\opengl4csharp.git\OpenGL\OpenGL.csproj">
-      <Project>{4A3D3106-AFEC-4E04-9630-7A1A2D0C16DB}</Project>
+    <ProjectReference Include="..\..\..\opengl4csharp\OpenGL\OpenGL.csproj">
+      <Project>{4a3d3106-afec-4e04-9630-7a1a2d0c16db}</Project>
       <Name>OpenGL</Name>
     </ProjectReference>
     <ProjectReference Include="..\External\Async\Async.csproj">
@@ -122,6 +122,7 @@
     <None Include="Render\OpenGl4CSharp\font24.fnt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Tao.FreeGlut.dll.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Render\GDI\FormGame.resx">
@@ -141,6 +142,12 @@
     <None Include="Render\OpenGl4CSharp\font24.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="freeglut.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tao.FreeGlut.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
