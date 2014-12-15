@@ -78,6 +78,16 @@ https://www.opengl.org/sdk/docs/man4/
 
 Tutorials:
 http://www.codeproject.com/Articles/771225/Learning-Modern-OpenGL
+https://github.com/yanko/opengl-series-csharp
+
+C# Game examples:
+https://github.com/andykorth/Pencil.Gaming
+https://github.com/remy22/BlueberryEngine
+
+Tao Tutorials:
+https://www.youtube.com/watch?v=0vDSWbSM9Rc
+
+
 
 GLUT:
 http://www.lighthouse3d.com/tutorials/glut-tutorial/
