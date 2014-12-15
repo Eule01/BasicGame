@@ -654,6 +654,7 @@ namespace GameCore.Render.OpenGl4CSharp
 //            vec.x = 2.0f*mouse.x/(float) viewport.Width - 1;
 //            vec.y = -(2.0f*mouse.y/(float) viewport.Height - 1);
 //            vec.y = -(vec.y = 2.0f*mouse.y/(float) viewport.Height) + 1;
+
 //            vec.y = -(2.0f*mouse.y/(float) viewport.Height) + 1;
             vec.z = mouse.z;
             vec.w = 1.0f;
