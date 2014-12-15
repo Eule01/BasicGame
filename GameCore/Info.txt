@@ -110,7 +110,7 @@ http://nehe.gamedev.net/news/collision_detection_lesson_ported_to_opentk/570036/
 http://neokabuto.blogspot.co.nz/2014/02/minor-tutorial-update.html
 
 https://github.com/lusid/OpenTK-Course
-
+http://www.codeproject.com/Articles/798054/SimpleScene-d-scene-manager-in-Csharp-and-OpenTK
 
 
 http://www.opentk.com/project/Yask
