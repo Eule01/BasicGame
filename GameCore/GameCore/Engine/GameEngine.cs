@@ -66,11 +66,11 @@ namespace GameCore.Engine
             }
             if (theUserInput.Right)
             {
-                thePlayer.Location += (thePlayer.Orientation.Perpendicular())*0.1f;
+                thePlayer.Location -= (thePlayer.Orientation.Perpendicular())*0.1f;
             }
             else if (theUserInput.Left)
             {
-                thePlayer.Location -= (thePlayer.Orientation.Perpendicular()) * 0.1f;
+                thePlayer.Location += (thePlayer.Orientation.Perpendicular()) * 0.1f;
             }
             if (!theUserInput.MousePosition.IsEmpty)
             {

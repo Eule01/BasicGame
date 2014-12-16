@@ -36,7 +36,7 @@ namespace GameCore.Render.OpenGl4CSharp
         private bool mouseDown;
         private int downX, downY;
         private int prevX, prevY;
-        private Vector3 mouseWorld = Vector3.Zero;
+        private Vector4 mouseWorld = Vector4.Zero;
 
         private Camera camera;
 
@@ -56,7 +56,18 @@ namespace GameCore.Render.OpenGl4CSharp
             name = "RendererOpenGl4CSharp";
         }
 
+        /// <summary>
+        ///     The near clipping distance.
+        /// </summary>
+        private static readonly float zNear = 0.1f;
+
+        /// <summary>
+        ///     The far clipping distance.
+        /// </summary>
+        private static readonly float zFar = 1000f;
+
         private Matrix4 projection_matrix;
+
         private ObjMaterial pointMaterial;
 
         public override void Start()
@@ -107,8 +118,8 @@ namespace GameCore.Render.OpenGl4CSharp
 
             // set up the projection and view matrix
             program.Use();
-            projection_matrix = Matrix4.CreatePerspectiveFieldOfView(0.45f, (float) width/height, 0.1f,
-                                                                     1000f);
+            projection_matrix = Matrix4.CreatePerspectiveFieldOfView(0.45f, (float) width/height, zNear,
+                                                                     zFar);
             program["projection_matrix"].SetValue(projection_matrix);
             program["model_matrix"].SetValue(Matrix4.Identity);
 
@@ -372,7 +383,12 @@ namespace GameCore.Render.OpenGl4CSharp
                     Gl.PointSize(10);
 
 
-                    Vector3[] vertexData = new[] { mouseWorld, new Vector3(0, 0, z), new Vector3(delta, delta, z), new Vector3(0, delta, z), new Vector3(delta, 0, z), };
+                    Vector3[] vertexData = new[]
+                        {
+                            new Vector3(mouseWorld.x, mouseWorld.y, mouseWorld.z + 0.1), new Vector3(0, 0, z),
+                            new Vector3(delta, delta, z), new Vector3(0, delta, z), new Vector3(delta, 0, z),
+                        };
+//                    Vector3[] vertexData = new[] { mouseWorld, new Vector3(0, 0, z), new Vector3(delta, delta, z), new Vector3(0, delta, z), new Vector3(delta, 0, z), };
                     VBO<Vector3> vertices = new VBO<Vector3>(vertexData);
 
                     if (pointMaterial != null) pointMaterial.Use();
@@ -402,8 +418,9 @@ namespace GameCore.Render.OpenGl4CSharp
                     // build this string every frame, since theta and phi can change
                     FontVAO vao = font.CreateString(fontProgram,
                                                     string.Format(
-                                                        "FPS:   {0:0.00}, [{1:0.0},{2:0.0},{3:0.0}] cam [{4:0.0},{5:0.0},{6:0.0}]",
-                                                        fps, mouseWorld.x, mouseWorld.y, mouseWorld.z, camera.Position.x,
+                                                        "FPS:   {0:0.00}, [{1:0.0},{2:0.0},{3:0.0},{4:0.000000}] cam [{5:0.0},{6:0.0},{7:0.0}]",
+                                                        fps, mouseWorld.x, mouseWorld.y, mouseWorld.z, mouseWorld.w,
+                                                        camera.Position.x,
                                                         camera.Position.y, camera.Position.z),
                                                     BMFont.Justification.Right);
                     vao.Position = new Vector2(width/2 - 10, height/2 - font.Height - 10);
@@ -451,8 +468,8 @@ namespace GameCore.Render.OpenGl4CSharp
             this.height = height;
 
             Gl.UseProgram(program.ProgramID);
-            projection_matrix = Matrix4.CreatePerspectiveFieldOfView(0.45f, (float) width/height, 0.1f,
-                                                                     1000f);
+//            projection_matrix = Matrix4.CreatePerspectiveFieldOfView(0.45f, (float) width/height, 0.1f,
+//                                                                     1000f);
             program["projection_matrix"].SetValue(projection_matrix);
 
             Gl.UseProgram(fontProgram.ProgramID);
@@ -490,6 +507,9 @@ namespace GameCore.Render.OpenGl4CSharp
             if (button == Glut.GLUT_LEFT_BUTTON && state == Glut.GLUT_DOWN)
             {
                 mouseWorld = ConvertScreenToWorldCoords(x, y, camera.ViewMatrix, projection_matrix, camera.Position);
+                Vector2 playerMouseVec = (mouseWorld.Xy - new Vector2(TheGameStatus.ThePlayer.Location.X,TheGameStatus.ThePlayer.Location.Y)).Normalize();
+
+                TheGameStatus.ThePlayer.Orientation = new Vector(playerMouseVec.x, playerMouseVec.y);
             }
             else if (button == Glut.GLUT_RIGHT_BUTTON)
             {
@@ -644,90 +664,74 @@ namespace GameCore.Render.OpenGl4CSharp
         }
 
 
-        public static Vector3 ConvertScreenToWorldCoords(int x, int y, Matrix4 modelViewMatrix, Matrix4 projectionMatrix,
-                                                         Vector3 viewPosition)
+        public static Vector4 ConvertScreenToWorldCoords(int x, int y, Matrix4 modelViewMatrix, Matrix4 projectionMatrix, Vector3 cameraPosition)
         {
             int[] viewport = new int[4];
-
             Gl.GetIntegerv(GetPName.Viewport, viewport);
 
-//            Matrix4 tempModelViewMatrix = new Matrix4(modelViewMatrix);
-//          tempModelViewMatrix =   tempModelViewMatrix.Transpose();
-//            tempModelViewMatrix[13] = -tempModelViewMatrix[13];
-            //Read the window z co-ordinate 
-            //(the z value on that point in unit cube)		
-//            glReadPixels(x, viewport[3] - y, 1, 1,
-//     GL_DEPTH_COMPONENT, GL_FLOAT, &z);
-//
-//            float[] z = new float[1];
             int[] zInt = new int[1];
             Gl.ReadPixels(x, viewport[3] - y, 1, 1, PixelFormat.DepthComponent,
                           PixelType.Float, zInt);
             byte[] bytes = BitConverter.GetBytes(zInt[0]);
             float z = BitConverter.ToSingle(bytes, 0);
 
-//            Gl.GetFloat(GetPName.ModelviewMatrix, out modelViewMatrix);
-//            Gl.GetFloat(GetPName.ProjectionMatrix, out projectionMatrix);
-//            Gl.GetInteger(GetPName.Viewport, viewport);
+            // http://www.songho.ca/opengl/gl_projectionmatrix.html
+            // http://web.archive.org/web/20130416194336/http://olivers.posterous.com/linear-depth-in-glsl-for-real
+            // The depth stored in the buffer [0 1].
+            float z_b = z;
+
+            // The depth in the normalized device coordinates [-1 1].
+            float z_n = 2.0f * z_b - 1.0f;
+
+            // The distance to the camera plane.
+            float z_e = 2.0f*zFar*zNear/(zFar + zNear - (zFar - zNear)*(2.0f*z_b - 1.0f));
+
             Vector3 mouse;
-            mouse.x = x;
 //            mouse.y = viewport[3] - y;
 //                        mouse.y =-( viewport[3] - y );
 //            mouse.Y = y + (ClientRectangle.Height - glview.Size.Height);
-            mouse.y = y; //B
 //            mouse.z = 0;
+            //            mouse.z = z; //B
 
+            mouse.x = x;
+            mouse.y = y; //B
+            mouse.z = z_n; //C
+            Vector4 vector = UnProject(projectionMatrix, modelViewMatrix, new Size(viewport[2], viewport[3]), mouse);
+ 
+            Vector3 distanceVec = -cameraPosition + vector.Xyz;
+            if (distanceVec.Length > zFar)
+            {
+                Vector3 distNormVec = distanceVec.Normalize();
+                vector.Xyz = cameraPosition + (distNormVec*zFar * 0.99f);
+            }
 
-            mouse.z = z; // B
-            Vector4 vector = UnProject(projectionMatrix, modelViewMatrix, new Size(viewport[2], viewport[3]), mouse);//B
-//            Vector4 vector = UnProject(projectionMatrix, tempModelViewMatrix, new Size(viewport[2], viewport[3]), mouse);
-//            Vector3 coords = new Vector3(vector.x , vector.y , vector.z);
-//            Vector3 coords = new Vector3(vector.x , vector.y , -vector.z);
-//            Vector3 coords = new Vector3(vector.x - viewPosition.x, vector.y - viewPosition.y, vector.z + viewPosition.z); //B
-            Vector3 coords = new Vector3(vector.x, vector.y, vector.z + viewPosition.z); 
-//            Vector3 coords = new Vector3(vector.x - viewPosition.x, vector.y - viewPosition.y, vector.z );
+            Vector4 coords = new Vector4(vector.x, vector.y, vector.z, z_e);
+
             return coords;
         }
 
+        /// <summary>
+        /// mouse.z has to be in normalized form [-1 1]
+        /// </summary>
+        /// <param name="projection"></param>
+        /// <param name="view"></param>
+        /// <param name="viewport"></param>
+        /// <param name="mouse"></param>
+        /// <returns></returns>
         private static Vector4 UnProject(Matrix4 projection, Matrix4 view, Size viewport, Vector3 mouse)
         {
             Vector4 vec;
 
             vec.x = 2.0f*mouse.x/viewport.Width - 1; //B
-            vec.y = -(2.0f * mouse.y / viewport.Height - 1); //B
-            //            vec.x = mouse.x/viewport.Width - 1;
-//            vec.y = (mouse.y/(float) viewport.Height - 1);
-//            vec.y = -(mouse.y/(float) viewport.Height - 1);
-//            vec.y = 2.0f * mouse.y / (float)viewport.Height + 1;
-//            vec.y = 2.0f * mouse.y / (float)viewport.Height - 1;
-//            vec.x = 2.0f*mouse.x/(float) viewport.Width - 1;
-//            vec.y = -(2.0f*mouse.y/viewport.Height + 1); 
-//            vec.y = -(2.0f*mouse.y/viewport.Height + 1);
-//            vec.y = -(mouse.y/viewport.Height - 1);
-//            vec.y = -(vec.y = 2.0f*mouse.y/(float) viewport.Height) + 1;
-
-//            vec.y = -(2.0f*mouse.y/(float) viewport.Height) + 1;
-            vec.z = mouse.z;//B
-//            vec.z = 0.0f;
-                vec.w = 1.0f;
+            vec.y = -(2.0f*mouse.y/viewport.Height - 1); //B
+            vec.z = mouse.z; //B
+            vec.w = 1.0f;
 
             Matrix4 viewInv = view.Inverse();
             Matrix4 projInv = projection.Inverse();
 
-
-//            vec = viewInv*projInv*vec;
-//            vec = projInv*vec;
-//            vec = viewInv*vec;
-//            vec = vec*projInv; //B
-//            vec = vec*viewInv; //B
             vec = vec*projInv*viewInv; //B
 
-//            Matrix4 viewInv = Matrix4.Invert(view);
-//            Matrix4 projInv = Matrix4.Invert(projection);
-//
-//            Vector4.Transform(ref vec, ref projInv, out vec);
-//            Vector4.Transform(ref vec, ref viewInv, out vec);
-//
             if (vec.w > float.Epsilon || vec.w < float.Epsilon)
             {
                 vec.x /= vec.w;
@@ -737,42 +741,6 @@ namespace GameCore.Render.OpenGl4CSharp
 
             return vec;
         }
-
-
-//        // http://www.opentk.com/node/1276
-//        public static Vector4 UnProject(ref Matrix4 projection, Matrix4 view, Size viewport, Vector2 mouse)
-//        {
-//            Vector4 vec;
-//
-//            vec.x = 2.0f * mouse.x / (float)viewport.Width - 1;
-//            vec.y = -(2.0f * mouse.y / (float)viewport.Height - 1);
-//            vec.z = 0;
-//            vec.w = 1.0f;
-//
-//            Matrix4 viewInv = view.Inverse();
-//            Matrix4 projInv = projection.Inverse();
-//
-////            Matrix4 viewInv = Matrix4.Invert(view);
-////            Matrix4 projInv = Matrix4.Invert(projection);
-////
-//  
-//            Gl.GetDoublev();
-//            vec = vec*projInv;
-//            Vector4.(ref vec, ref projInv, out vec);
-//            Vector4.Transform(ref vec, ref viewInv, out vec);
-////            Vector4.Transform(ref vec, ref projInv, out vec);
-////            Vector4.Transform(ref vec, ref viewInv, out vec);
-//
-//            if (vec.w > float.Epsilon || vec.w < float.Epsilon)
-//            {
-//                vec.x /= vec.w;
-//                vec.y /= vec.w;
-//                vec.z /= vec.w;
-//            }
-//
-//            return vec;
-//        }
-
 
         private static string VertexShader = @"
 #version 130

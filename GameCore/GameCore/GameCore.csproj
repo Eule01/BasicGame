@@ -109,7 +109,7 @@
     <Compile Include="Utils\Vector.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\opengl4csharp\OpenGL\OpenGL.csproj">
+    <ProjectReference Include="..\..\..\opengl4csharp.git\OpenGL\OpenGL.csproj">
       <Project>{4a3d3106-afec-4e04-9630-7a1a2d0c16db}</Project>
       <Name>OpenGL</Name>
     </ProjectReference>

@@ -80,6 +80,11 @@ Tutorials:
 http://www.codeproject.com/Articles/771225/Learning-Modern-OpenGL
 https://github.com/yanko/opengl-series-csharp
 
+OpenGL Projection Matrix, depth buffer
+http://www.songho.ca/opengl/gl_projectionmatrix.html
+http://web.archive.org/web/20130426093607/http://www.songho.ca/opengl/gl_projectionmatrix.html
+http://web.archive.org/web/20130416194336/http://olivers.posterous.com/linear-depth-in-glsl-for-real
+
 C# Game examples:
 https://github.com/andykorth/Pencil.Gaming
 https://github.com/remy22/BlueberryEngine
