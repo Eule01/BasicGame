@@ -23,9 +23,9 @@ namespace GameCore.Render.OpenGl4CSharp
 
         private ShaderProgram program;
         private ObjLoader objectList;
-        private bool fullscreen = false;
-        private bool wireframe = false;
-        private bool msaa = false;
+        private bool fullscreen;
+        private bool wireframe;
+        private bool msaa;
         private bool showInfo = true;
 
         private bool camLeft, camRight, camForward, camBack, space;
@@ -33,7 +33,7 @@ namespace GameCore.Render.OpenGl4CSharp
         private bool camUp;
         private bool camDown;
 
-        private bool mouseDown = false;
+        private bool mouseDown;
         private int downX, downY;
         private int prevX, prevY;
         private Vector3 mouseWorld = Vector3.Zero;
@@ -44,16 +44,20 @@ namespace GameCore.Render.OpenGl4CSharp
         private ShaderProgram fontProgram;
         private FontVAO information;
 
-        private bool exit = false;
+        private bool exit;
 
 
         private List<ObjObject> theTileObjects;
         private List<RenderGameObject> theRenderGameObjects;
+        private float fps = 30;
 
         public RendererOpenGl4CSharp()
         {
             name = "RendererOpenGl4CSharp";
         }
+
+        private Matrix4 projection_matrix;
+        private ObjMaterial pointMaterial;
 
         public override void Start()
         {
@@ -108,12 +112,15 @@ namespace GameCore.Render.OpenGl4CSharp
             program["projection_matrix"].SetValue(projection_matrix);
             program["model_matrix"].SetValue(Matrix4.Identity);
 
+            pointMaterial = RenderObjects.CreatPlainMaterial(new Size(10, 10), program, Color.Red);
+
             objectList = new ObjLoader(program);
             // objectList = new ObjLoader("enterprise.obj", program);
 
-            ObjMaterial tempMaterial = new ObjMaterial(program);
-            tempMaterial.DiffuseMap =
-                new Texture(BitmapHelper.CreatBitamp(new Size(20, 20), new SolidBrush(Color.Green)));
+            ObjMaterial tempMaterial = new ObjMaterial(program)
+                {
+                    DiffuseMap = new Texture(BitmapHelper.CreatBitamp(new Size(20, 20), new SolidBrush(Color.Green)))
+                };
 
             Dictionary<Tile.TileIds, PlainBmpTexture> tempTileList =
                 RenderObjects.CreateTileTextures(new Size(20, 20), program);
@@ -243,7 +250,7 @@ namespace GameCore.Render.OpenGl4CSharp
         public static RenderGameObject CreateCube(ShaderProgram program, Vector3 min, Vector3 max)
         {
             RenderGameObject tempObj;
-            Vector3[] vertex = new Vector3[]
+            Vector3[] vertex = new[]
                 {
                     new Vector3(min.x, min.y, max.z),
                     new Vector3(max.x, min.y, max.z),
@@ -255,7 +262,7 @@ namespace GameCore.Render.OpenGl4CSharp
                     new Vector3(min.x, min.y, min.z)
                 };
 
-            int[] element = new int[]
+            int[] element = new[]
                 {
                     0, 1, 2, 1, 3, 2,
                     1, 4, 3, 4, 5, 3,
@@ -274,7 +281,7 @@ namespace GameCore.Render.OpenGl4CSharp
         public static ObjObject CreateSquare(ShaderProgram program, Vector3 min, Vector3 max)
         {
             ObjObject tempObj;
-            Vector3[] vertex = new Vector3[]
+            Vector3[] vertex = new[]
                 {
                     new Vector3(min.x, min.y, min.z),
                     new Vector3(max.x, min.y, min.z),
@@ -282,7 +289,7 @@ namespace GameCore.Render.OpenGl4CSharp
                     new Vector3(max.x, max.y, max.z),
                 };
 
-            int[] element = new int[]
+            int[] element = new[]
                 {
                     0, 1, 3,
                     0, 2, 3,
@@ -307,8 +314,6 @@ namespace GameCore.Render.OpenGl4CSharp
         {
         }
 
-        private float fps = 30;
-
         private void OnRenderFrame()
         {
             if (exit)
@@ -320,7 +325,8 @@ namespace GameCore.Render.OpenGl4CSharp
                 watch.Stop();
                 float deltaTime = (float) watch.ElapsedTicks/Stopwatch.Frequency;
                 float tempfps = 1.0f/deltaTime;
-                fps = fps * 0.9f + tempfps * 0.1f; // linear interpolate retained fps with this frames fps with a strong weighting to former.
+                fps = fps*0.9f + tempfps*0.1f;
+                // linear interpolate retained fps with this frames fps with a strong weighting to former.
                 watch.Restart();
 
                 if (msaa) Gl.Enable(EnableCap.Multisample);
@@ -357,6 +363,24 @@ namespace GameCore.Render.OpenGl4CSharp
                         theTileObject.Draw();
                     }
                 }
+                if (true)
+                {
+                    double delta = 5;
+                    double z = 0.1;
+//                    Gl.Enable(GetPName.PointSmooth);
+//                    Gl
+                    Gl.PointSize(10);
+
+
+                    Vector3[] vertexData = new[] { mouseWorld, new Vector3(0, 0, z), new Vector3(delta, delta, z), new Vector3(0, delta, z), new Vector3(delta, 0, z), };
+                    VBO<Vector3> vertices = new VBO<Vector3>(vertexData);
+
+                    if (pointMaterial != null) pointMaterial.Use();
+
+                    Gl.BindBufferToShaderAttribute(vertices, program, "vertexPosition");
+
+                    Gl.DrawElements(BeginMode.Points, vertices.Count, DrawElementsType.UnsignedInt, IntPtr.Zero);
+                }
 
                 if (theRenderGameObjects != null)
                 {
@@ -365,6 +389,7 @@ namespace GameCore.Render.OpenGl4CSharp
                         renderGameObject.Draw(program);
                     }
                 }
+
 
                 Gl.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 
@@ -378,7 +403,9 @@ namespace GameCore.Render.OpenGl4CSharp
                     FontVAO vao = font.CreateString(fontProgram,
                                                     string.Format(
                                                         "FPS:   {0:0.00}, [{1:0.0},{2:0.0},{3:0.0}] cam [{4:0.0},{5:0.0},{6:0.0}]",
-                                                        fps, mouseWorld.x, mouseWorld.y, mouseWorld.z, camera.Position.x, camera.Position.y, camera.Position.z), BMFont.Justification.Right);
+                                                        fps, mouseWorld.x, mouseWorld.y, mouseWorld.z, camera.Position.x,
+                                                        camera.Position.y, camera.Position.z),
+                                                    BMFont.Justification.Right);
                     vao.Position = new Vector2(width/2 - 10, height/2 - font.Height - 10);
                     vao.Draw();
                     vao.Dispose();
@@ -440,6 +467,14 @@ namespace GameCore.Render.OpenGl4CSharp
             {
                 objectList.Dispose();
             }
+            foreach (RenderGameObject aRenderGameObject in theRenderGameObjects)
+            {
+                aRenderGameObject.Dispose();
+            }
+            foreach (ObjObject aObjObject in theTileObjects)
+            {
+                aObjObject.Dispose();
+            }
             program.DisposeChildren = true;
             program.Dispose();
             fontProgram.DisposeChildren = true;
@@ -454,12 +489,10 @@ namespace GameCore.Render.OpenGl4CSharp
         {
             if (button == Glut.GLUT_LEFT_BUTTON && state == Glut.GLUT_DOWN)
             {
-
                 mouseWorld = ConvertScreenToWorldCoords(x, y, camera.ViewMatrix, projection_matrix, camera.Position);
             }
             else if (button == Glut.GLUT_RIGHT_BUTTON)
             {
-
                 // this method gets called whenever a new mouse button event happens
                 mouseDown = (state == Glut.GLUT_DOWN);
 
@@ -605,13 +638,14 @@ namespace GameCore.Render.OpenGl4CSharp
 //            mouse.y = viewport[3] - y;
             mouse.y = y;
             mouse.z = z;
-            Vector4 vector = UnProject(ref projectionMatrix, modelViewMatrix, new Size(viewport[2], viewport[3]), mouse);
+            Vector4 vector = UnProject(projectionMatrix, modelViewMatrix, new Size(viewport[2], viewport[3]), mouse);
             Vector3 coords = new Vector3(vector.x, vector.y, vector.z);
             return coords;
         }
 
 
-        public static Vector3 ConvertScreenToWorldCoords(int x, int y, Matrix4 modelViewMatrix, Matrix4 projectionMatrix, Vector3 ViewPosition)
+        public static Vector3 ConvertScreenToWorldCoords(int x, int y, Matrix4 modelViewMatrix, Matrix4 projectionMatrix,
+                                                         Vector3 viewPosition)
         {
             int[] viewport = new int[4];
 
@@ -635,24 +669,35 @@ namespace GameCore.Render.OpenGl4CSharp
             Vector3 mouse;
             mouse.x = x;
 //            mouse.y = viewport[3] - y;
+//                        mouse.y =-( viewport[3] - y );
 //            mouse.Y = y + (ClientRectangle.Height - glview.Size.Height);
-            mouse.y = y;
-            mouse.z = z;
-            Vector4 vector = UnProject(ref projectionMatrix, modelViewMatrix, new Size(viewport[2], viewport[3]), mouse);
-            Vector3 coords = new Vector3(vector.x , vector.y , vector.z);
-//            Vector3 coords = new Vector3(vector.x + ViewPosition.x, vector.y + ViewPosition.y, vector.z);
+            mouse.y = y; //B
+//            mouse.z = 0;
+
+
+            mouse.z = z; // B
+            Vector4 vector = UnProject(projectionMatrix, modelViewMatrix, new Size(viewport[2], viewport[3]), mouse);
+//            Vector3 coords = new Vector3(vector.x , vector.y , vector.z);
+//            Vector3 coords = new Vector3(vector.x , vector.y , -vector.z);
+            Vector3 coords = new Vector3(vector.x - viewPosition.x, vector.y - viewPosition.y, vector.z + viewPosition.z);
+//            Vector3 coords = new Vector3(vector.x - viewPosition.x, vector.y - viewPosition.y, vector.z );
             return coords;
         }
 
-        private static Vector4 UnProject(ref Matrix4 projection, Matrix4 view, Size viewport, Vector3 mouse)
+        private static Vector4 UnProject(Matrix4 projection, Matrix4 view, Size viewport, Vector3 mouse)
         {
             Vector4 vec;
 
-            vec.x = mouse.x/(float) viewport.Width - 1;
+            vec.x = 2.0f*mouse.x/viewport.Width - 1; //B
+//            vec.x = mouse.x/viewport.Width - 1;
+//            vec.y = (mouse.y/(float) viewport.Height - 1);
 //            vec.y = -(mouse.y/(float) viewport.Height - 1);
-            vec.y = 2.0f * mouse.y / (float)viewport.Height + 1;
+//            vec.y = 2.0f * mouse.y / (float)viewport.Height + 1;
 //            vec.x = 2.0f*mouse.x/(float) viewport.Width - 1;
-//            vec.y = -(2.0f*mouse.y/(float) viewport.Height - 1);
+            vec.y = -(2.0f*mouse.y/viewport.Height - 1); //B
+//            vec.y = -(2.0f*mouse.y/viewport.Height + 1); 
+//            vec.y = -(2.0f*mouse.y/viewport.Height + 1);
+//            vec.y = -(mouse.y/viewport.Height - 1);
 //            vec.y = -(vec.y = 2.0f*mouse.y/(float) viewport.Height) + 1;
 
 //            vec.y = -(2.0f*mouse.y/(float) viewport.Height) + 1;
@@ -664,8 +709,9 @@ namespace GameCore.Render.OpenGl4CSharp
 
 //            vec = projInv*vec;
 //            vec = viewInv*vec;
-            vec = vec*projInv;
-            vec = vec*viewInv;
+//            vec = vec*projInv; //B
+//            vec = vec*viewInv; //B
+            vec = vec*projInv*viewInv; //B
 
 //            Matrix4 viewInv = Matrix4.Invert(view);
 //            Matrix4 projInv = Matrix4.Invert(projection);
@@ -803,7 +849,6 @@ void main(void)
 {
   out_frag_color = mix(texture2D(active_texture, uv), vec4(1, 1, 1, 1), 0.05);
 }";
-        private Matrix4 projection_matrix;
 
         #endregion
     }
