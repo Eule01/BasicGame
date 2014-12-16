@@ -651,6 +651,9 @@ namespace GameCore.Render.OpenGl4CSharp
 
             Gl.GetIntegerv(GetPName.Viewport, viewport);
 
+//            Matrix4 tempModelViewMatrix = new Matrix4(modelViewMatrix);
+//          tempModelViewMatrix =   tempModelViewMatrix.Transpose();
+//            tempModelViewMatrix[13] = -tempModelViewMatrix[13];
             //Read the window z co-ordinate 
             //(the z value on that point in unit cube)		
 //            glReadPixels(x, viewport[3] - y, 1, 1,
@@ -676,10 +679,12 @@ namespace GameCore.Render.OpenGl4CSharp
 
 
             mouse.z = z; // B
-            Vector4 vector = UnProject(projectionMatrix, modelViewMatrix, new Size(viewport[2], viewport[3]), mouse);
+            Vector4 vector = UnProject(projectionMatrix, modelViewMatrix, new Size(viewport[2], viewport[3]), mouse);//B
+//            Vector4 vector = UnProject(projectionMatrix, tempModelViewMatrix, new Size(viewport[2], viewport[3]), mouse);
 //            Vector3 coords = new Vector3(vector.x , vector.y , vector.z);
 //            Vector3 coords = new Vector3(vector.x , vector.y , -vector.z);
-            Vector3 coords = new Vector3(vector.x - viewPosition.x, vector.y - viewPosition.y, vector.z + viewPosition.z);
+//            Vector3 coords = new Vector3(vector.x - viewPosition.x, vector.y - viewPosition.y, vector.z + viewPosition.z); //B
+            Vector3 coords = new Vector3(vector.x, vector.y, vector.z + viewPosition.z); 
 //            Vector3 coords = new Vector3(vector.x - viewPosition.x, vector.y - viewPosition.y, vector.z );
             return coords;
         }
@@ -689,24 +694,28 @@ namespace GameCore.Render.OpenGl4CSharp
             Vector4 vec;
 
             vec.x = 2.0f*mouse.x/viewport.Width - 1; //B
-//            vec.x = mouse.x/viewport.Width - 1;
+            vec.y = -(2.0f * mouse.y / viewport.Height - 1); //B
+            //            vec.x = mouse.x/viewport.Width - 1;
 //            vec.y = (mouse.y/(float) viewport.Height - 1);
 //            vec.y = -(mouse.y/(float) viewport.Height - 1);
 //            vec.y = 2.0f * mouse.y / (float)viewport.Height + 1;
+//            vec.y = 2.0f * mouse.y / (float)viewport.Height - 1;
 //            vec.x = 2.0f*mouse.x/(float) viewport.Width - 1;
-            vec.y = -(2.0f*mouse.y/viewport.Height - 1); //B
 //            vec.y = -(2.0f*mouse.y/viewport.Height + 1); 
 //            vec.y = -(2.0f*mouse.y/viewport.Height + 1);
 //            vec.y = -(mouse.y/viewport.Height - 1);
 //            vec.y = -(vec.y = 2.0f*mouse.y/(float) viewport.Height) + 1;
 
 //            vec.y = -(2.0f*mouse.y/(float) viewport.Height) + 1;
-            vec.z = mouse.z;
-            vec.w = 1.0f;
+            vec.z = mouse.z;//B
+//            vec.z = 0.0f;
+                vec.w = 1.0f;
 
             Matrix4 viewInv = view.Inverse();
             Matrix4 projInv = projection.Inverse();
 
+
+//            vec = viewInv*projInv*vec;
 //            vec = projInv*vec;
 //            vec = viewInv*vec;
 //            vec = vec*projInv; //B
