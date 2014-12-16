@@ -36,7 +36,7 @@ namespace GameCore.Render.OpenGl4CSharp
         private bool mouseDown;
         private int downX, downY;
         private int prevX, prevY;
-        private Vector4 mouseWorld = Vector4.Zero;
+        private Vector3 mouseWorld = Vector3.Zero;
 
         private Camera camera;
 
@@ -376,18 +376,22 @@ namespace GameCore.Render.OpenGl4CSharp
                 }
                 if (true)
                 {
+                    // Draw a small test grid
                     double delta = 5;
                     double z = 0.1;
                     Gl.PointSize(10);
                     // For some reason EnableCap.PointSmooth = ((int)0x0B10), was commented out in OpenGL4CSharp.
                     Gl.Enable(EnableCap.PointSmooth);
 
+                    // shift the mouse point a bit toward the camera
+                    Vector3 mousePoint = mouseWorld + ((camera.Position - mouseWorld).Normalize())*0.01f;
+
                     Vector3[] vertexData = new[]
                         {
-                            new Vector3(mouseWorld.x, mouseWorld.y, mouseWorld.z + 0.1), new Vector3(0, 0, z),
+                            mousePoint, new Vector3(0, 0, z),
                             new Vector3(delta, delta, z), new Vector3(0, delta, z), new Vector3(delta, 0, z),
                         };
-//                    Vector3[] vertexData = new[] { mouseWorld, new Vector3(0, 0, z), new Vector3(delta, delta, z), new Vector3(0, delta, z), new Vector3(delta, 0, z), };
+
                     VBO<Vector3> vertices = new VBO<Vector3>(vertexData);
 
                     if (pointMaterial != null) pointMaterial.Use();
@@ -395,6 +399,8 @@ namespace GameCore.Render.OpenGl4CSharp
                     Gl.BindBufferToShaderAttribute(vertices, program, "vertexPosition");
 
                     Gl.DrawElements(BeginMode.Points, vertices.Count, DrawElementsType.UnsignedInt, IntPtr.Zero);
+                    vertices.Dispose();
+                    vertices = null;
                 }
 
                 if (theRenderGameObjects != null)
@@ -412,19 +418,21 @@ namespace GameCore.Render.OpenGl4CSharp
                 Gl.UseProgram(fontProgram.ProgramID);
                 Gl.BindTexture(font.FontTexture);
 
+                // BUG The VBO not disposing error seems to come from in here.
                 if (showInfo)
                 {
                     // build this string every frame, since theta and phi can change
-                    FontVAO vao = font.CreateString(fontProgram,
-                                                    string.Format(
-                                                        "FPS:   {0:0.00}, [{1:0.0},{2:0.0},{3:0.0},{4:0.000000}] cam [{5:0.0},{6:0.0},{7:0.0}]",
-                                                        fps, mouseWorld.x, mouseWorld.y, mouseWorld.z, mouseWorld.w,
-                                                        camera.Position.x,
-                                                        camera.Position.y, camera.Position.z),
-                                                    BMFont.Justification.Right);
-                    vao.Position = new Vector2(width/2 - 10, height/2 - font.Height - 10);
-                    vao.Draw();
-                    vao.Dispose();
+                    gameOverlayInfo = font.CreateString(fontProgram,
+                                                        string.Format(
+                                                            "FPS:   {0:0.00}, [{1:0.0},{2:0.0},{3:0.0}] cam [{4:0.0},{5:0.0},{6:0.0}]",
+                                                            fps, mouseWorld.x, mouseWorld.y, mouseWorld.z,
+                                                            camera.Position.x, camera.Position.y, camera.Position.z),
+                                                        BMFont.Justification.Right);
+
+                    gameOverlayInfo.Position = new Vector2(width/2 - 10, height/2 - font.Height - 10);
+                    gameOverlayInfo.Draw();
+                    gameOverlayInfo.Dispose();
+                    gameOverlayInfo = null;
                 }
 
                 // draw the tutorial information, which is static
@@ -506,7 +514,9 @@ namespace GameCore.Render.OpenGl4CSharp
             if (button == Glut.GLUT_LEFT_BUTTON && state == Glut.GLUT_DOWN)
             {
                 mouseWorld = ConvertScreenToWorldCoords(x, y, camera.ViewMatrix, projection_matrix, camera.Position);
-                Vector2 playerMouseVec = (mouseWorld.Xy - new Vector2(TheGameStatus.ThePlayer.Location.X,TheGameStatus.ThePlayer.Location.Y)).Normalize();
+                Vector2 playerMouseVec =
+                    (new Vector2(mouseWorld.x, mouseWorld.y) -
+                     new Vector2(TheGameStatus.ThePlayer.Location.X, TheGameStatus.ThePlayer.Location.Y)).Normalize();
 
                 TheGameStatus.ThePlayer.Orientation = new Vector(playerMouseVec.x, playerMouseVec.y);
             }
@@ -672,7 +682,8 @@ namespace GameCore.Render.OpenGl4CSharp
         /// <param name="projectionMatrix"></param>
         /// <param name="cameraPosition"></param>
         /// <returns></returns>
-        public static Vector4 ConvertScreenToWorldCoords(int x, int y, Matrix4 modelViewMatrix, Matrix4 projectionMatrix, Vector3 cameraPosition)
+        public static Vector3 ConvertScreenToWorldCoords(int x, int y, Matrix4 modelViewMatrix, Matrix4 projectionMatrix,
+                                                         Vector3 cameraPosition)
         {
             int[] viewport = new int[4];
             Gl.GetIntegerv(GetPName.Viewport, viewport);
@@ -689,9 +700,9 @@ namespace GameCore.Render.OpenGl4CSharp
             float z_b = z;
 
             // The depth in the normalized device coordinates [-1 1].
-            float z_n = 2.0f * z_b - 1.0f;
+            float z_n = 2.0f*z_b - 1.0f;
 
-            // The distance to the camera plane.
+            // The distance to the camera plane in grid units.
             float z_e = 2.0f*zFar*zNear/(zFar + zNear - (zFar - zNear)*(2.0f*z_b - 1.0f));
 
             Vector3 mouse;
@@ -703,15 +714,15 @@ namespace GameCore.Render.OpenGl4CSharp
             mouse.y = y; //B
             mouse.z = z_n; //C
             Vector4 vector = UnProject(projectionMatrix, modelViewMatrix, new Size(viewport[2], viewport[3]), mouse);
- 
+
             Vector3 distanceVec = -cameraPosition + vector.Xyz;
             if (distanceVec.Length > zFar)
             {
                 Vector3 distNormVec = distanceVec.Normalize();
-                vector.Xyz = cameraPosition + (distNormVec*zFar * 0.99f);
+                vector.Xyz = cameraPosition + (distNormVec*zFar*0.99f);
             }
 
-            Vector4 coords = new Vector4(vector.x, vector.y, vector.z, z_e);
+            Vector3 coords = new Vector3(vector.x, vector.y, vector.z);
 
             return coords;
         }
@@ -832,6 +843,7 @@ void main(void)
 {
   out_frag_color = mix(texture2D(active_texture, uv), vec4(1, 1, 1, 1), 0.05);
 }";
+        private FontVAO gameOverlayInfo;
 
         #endregion
     }
