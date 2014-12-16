@@ -378,10 +378,9 @@ namespace GameCore.Render.OpenGl4CSharp
                 {
                     double delta = 5;
                     double z = 0.1;
-//                    Gl.Enable(GetPName.PointSmooth);
-//                    Gl
                     Gl.PointSize(10);
-
+                    // For some reason EnableCap.PointSmooth = ((int)0x0B10), was commented out in OpenGL4CSharp.
+                    Gl.Enable(EnableCap.PointSmooth);
 
                     Vector3[] vertexData = new[]
                         {
@@ -663,7 +662,16 @@ namespace GameCore.Render.OpenGl4CSharp
             return coords;
         }
 
-
+        /// <summary>
+        /// This one is nearly working perfectly. There is a small error which I think can be corrected using something like this
+        /// mouse.Y = y + (ClientRectangle.Height - glview.Size.Height);
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="modelViewMatrix"></param>
+        /// <param name="projectionMatrix"></param>
+        /// <param name="cameraPosition"></param>
+        /// <returns></returns>
         public static Vector4 ConvertScreenToWorldCoords(int x, int y, Matrix4 modelViewMatrix, Matrix4 projectionMatrix, Vector3 cameraPosition)
         {
             int[] viewport = new int[4];
@@ -690,8 +698,6 @@ namespace GameCore.Render.OpenGl4CSharp
 //            mouse.y = viewport[3] - y;
 //                        mouse.y =-( viewport[3] - y );
 //            mouse.Y = y + (ClientRectangle.Height - glview.Size.Height);
-//            mouse.z = 0;
-            //            mouse.z = z; //B
 
             mouse.x = x;
             mouse.y = y; //B
