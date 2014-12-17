@@ -110,7 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\opengl4csharp\OpenGL\OpenGL.csproj">
-      <Project>{4a3d3106-afec-4e04-9630-7a1a2d0c16db}</Project>
+      <Project>{4A3D3106-AFEC-4E04-9630-7A1A2D0C16DB}</Project>
       <Name>OpenGL</Name>
     </ProjectReference>
     <ProjectReference Include="..\External\Async\Async.csproj">

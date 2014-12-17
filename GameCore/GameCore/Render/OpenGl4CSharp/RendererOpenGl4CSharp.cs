@@ -26,7 +26,7 @@ namespace GameCore.Render.OpenGl4CSharp
         private bool fullscreen;
         private bool wireframe;
         private bool msaa;
-        private bool showInfo = true;
+        private bool showInfo = false;
 
         private bool camLeft, camRight, camForward, camBack, space;
 
@@ -418,25 +418,31 @@ namespace GameCore.Render.OpenGl4CSharp
                 Gl.UseProgram(fontProgram.ProgramID);
                 Gl.BindTexture(font.FontTexture);
 
+                // draw the tutorial information, which is static
+                information.Draw();
+
+
                 // BUG The VBO not disposing error seems to come from in here.
                 if (showInfo)
                 {
                     // build this string every frame, since theta and phi can change
                     string tempText = string.Format(
-                        "FPS:   {0:0.00}, [{1:0.0},{2:0.0},{3:0.0}] cam [{4:0.0},{5:0.0},{6:0.0}]",
+                        "FPS: {0:0.00}, Mouse: [{1:0.0},{2:0.0},{3:0.0}], Camera: [{4:0.0},{5:0.0},{6:0.0}]",
                         fps, mouseWorld.x, mouseWorld.y, mouseWorld.z,
                         camera.Position.x, camera.Position.y, camera.Position.z);
-                    gameOverlayInfo = font.CreateString(fontProgram, tempText,
+//                    if (gameOverlayInfo != null)
+//                    gameOverlayInfo.Dispose();
+
+             
+                   FontVAO gameOverlayInfo = font.CreateString(fontProgram, tempText,
                                                         BMFont.Justification.Right);
 
                     gameOverlayInfo.Position = new Vector2(width/2 - 10, height/2 - font.Height - 10);
                     gameOverlayInfo.Draw();
                     gameOverlayInfo.Dispose();
-                    gameOverlayInfo = null;
+                    //                    gameOverlayInfo = null;
                 }
 
-                // draw the tutorial information, which is static
-                information.Draw();
 
                 Glut.glutSwapBuffers();
             }
@@ -843,7 +849,6 @@ void main(void)
 {
   out_frag_color = mix(texture2D(active_texture, uv), vec4(1, 1, 1, 1), 0.05);
 }";
-        private FontVAO gameOverlayInfo;
 
         #endregion
     }
