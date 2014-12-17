@@ -422,11 +422,11 @@ namespace GameCore.Render.OpenGl4CSharp
                 if (showInfo)
                 {
                     // build this string every frame, since theta and phi can change
-                    gameOverlayInfo = font.CreateString(fontProgram,
-                                                        string.Format(
-                                                            "FPS:   {0:0.00}, [{1:0.0},{2:0.0},{3:0.0}] cam [{4:0.0},{5:0.0},{6:0.0}]",
-                                                            fps, mouseWorld.x, mouseWorld.y, mouseWorld.z,
-                                                            camera.Position.x, camera.Position.y, camera.Position.z),
+                    string tempText = string.Format(
+                        "FPS:   {0:0.00}, [{1:0.0},{2:0.0},{3:0.0}] cam [{4:0.0},{5:0.0},{6:0.0}]",
+                        fps, mouseWorld.x, mouseWorld.y, mouseWorld.z,
+                        camera.Position.x, camera.Position.y, camera.Position.z);
+                    gameOverlayInfo = font.CreateString(fontProgram, tempText,
                                                         BMFont.Justification.Right);
 
                     gameOverlayInfo.Position = new Vector2(width/2 - 10, height/2 - font.Height - 10);
