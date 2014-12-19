@@ -128,7 +128,7 @@ namespace GameCore.Render
 
         protected virtual void DrawMap(Map.Map aMap)
         {
-            Size tempMapSize = aMap.TheSize;
+            RectangleF tempMapSize = aMap.TheBoundingBox;
             for (int x = 0; x < tempMapSize.Width; x++)
             {
                 for (int y = 0; y < tempMapSize.Height; y++)

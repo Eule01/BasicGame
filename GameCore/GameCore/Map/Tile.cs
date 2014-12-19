@@ -25,18 +25,32 @@ namespace GameCore.Map
 
         private TileIds theTileId = TileIds.Desert;
 
+        public Tile()
+        {
+        }
+
         public Tile(TileIds aTileId)
         {
             theTileId = aTileId;
         }
 
-        public Vector Location = new Vector(0, 0);
 
         public TileIds TheTileId
         {
             get { return theTileId; }
+            set { theTileId = value; }
         }
 
+        public Vector Location = new Vector(0, 0);
+
+        public override string ToString()
+        {
+            string outStr = "";
+            outStr += Location.ToString();
+            outStr += " " + theTileId;
+
+            return outStr;
+        }
 
         public static Dictionary<TileIds, TileType> GetTileTypes()
         {

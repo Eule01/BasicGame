@@ -57,6 +57,11 @@ namespace GameCore.Render.GDI
             base.Close();
         }
 
+        public override void MapLoaded()
+        {
+
+        }
+
         protected override void UpdateRender()
         {
             if (TheRenderControl != null && !TheRenderControl.Disposing)

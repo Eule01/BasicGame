@@ -11,8 +11,19 @@ namespace GameCore
     {
         public enum Types
         {
+            /// <summary>
+            /// A fps status has been received.
+            /// </summary>
             Status,
-            Message
+            Message,
+            /// <summary>
+            /// A new map has been loaded (Message = filePath).
+            /// </summary>
+            MapLoaded,
+            /// <summary>
+            /// Map has been saved (Message = filePath).
+            /// </summary>
+            MapSaved
         }
 
         private Types theType;

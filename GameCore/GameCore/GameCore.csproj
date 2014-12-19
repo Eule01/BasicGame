@@ -96,6 +96,7 @@
     </Compile>
     <Compile Include="Utils\BitmapHelper.cs" />
     <Compile Include="Utils\FormPositioner.cs" />
+    <Compile Include="Utils\SaveObjects.cs" />
     <Compile Include="Utils\Timers\AccurateStopWatch.cs" />
     <Compile Include="Utils\Timers\FastTimer.cs" />
     <Compile Include="Utils\RandomNumGen.cs" />

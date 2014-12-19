@@ -239,7 +239,7 @@ namespace GameCore.Render.OpenGl4CSharp
             Dictionary<Tile.TileIds, PlainBmpTexture> tempTiletypeList =
                 RenderObjects.CreateTileTextures(new Size(20, 20), program);
             List<ObjObject> tempObjList = new List<ObjObject>();
-            List<Tile> tempTiles = TheGameStatus.TheMap.Tiles;
+            IEnumerable<Tile> tempTiles = TheGameStatus.TheMap.Tiles;
             foreach (Tile tempTile in tempTiles)
             {
                 Vector tempLoc = tempTile.Location;
@@ -319,6 +319,18 @@ namespace GameCore.Render.OpenGl4CSharp
             Thread.Sleep(100);
 //            OnClose();
 //            Glut.glutLeaveMainLoop();
+        }
+
+        public override void MapLoaded()
+        {
+            Close();
+
+//            foreach (ObjObject aObjObject in theTileObjects)
+//            {
+//                aObjObject.Dispose();
+//            }
+//            theTileObjects = GetTileObjects();
+            Start();
         }
 
         private void OnDisplay()

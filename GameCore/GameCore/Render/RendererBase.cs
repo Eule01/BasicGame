@@ -27,5 +27,7 @@ namespace GameCore.Render
         {
             return name;
         }
+
+        public abstract void MapLoaded();
     }
 }

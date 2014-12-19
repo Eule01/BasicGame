@@ -1,6 +1,7 @@
 ﻿#region
 
 using System.Collections.Generic;
+using System.IO;
 using GameCore.GameObjects;
 using GameCore.Utils;
 
@@ -43,7 +44,7 @@ namespace GameCore
         internal static GameStatus CreatTestGame()
         {
             GameStatus tempGameStatus = new GameStatus {TheMap = Map.Map.GetTestMap()};
-            ObjectPlayer tempPlayer = new ObjectPlayer(GameObject.ObjcetIds.Player) { Location = new Vector(10.3, 5.6) };
+            ObjectPlayer tempPlayer = new ObjectPlayer(GameObject.ObjcetIds.Player) {Location = new Vector(10.3, 5.6)};
             tempGameStatus.ThePlayer = tempPlayer;
             tempGameStatus.GameObjects.Add(tempPlayer);
             return tempGameStatus;
@@ -75,6 +76,25 @@ namespace GameCore
         public void Close()
         {
             TheMap.Close();
+        }
+
+        public void SaveMap(string aFilePath)
+        {
+            Map.Map.SaveMap(aFilePath, TheMap);
+        }
+
+        public void LoadMap(string aFilePath)
+        {
+            TheMap = Map.Map.LoadMap(aFilePath);
+        }
+
+        private static string FileNameToMapFileName(string aFilePath)
+        {
+            string tempPath = Path.GetDirectoryName(aFilePath);
+            string aFileName = Path.GetFileNameWithoutExtension(aFilePath);
+            aFileName = "Map_" + aFileName + ".xml";
+            string tempFilePath = Path.Combine(tempPath, aFileName);
+            return tempFilePath;
         }
     }
 }

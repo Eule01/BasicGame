@@ -63,7 +63,7 @@ namespace GameCore.Render.GDI
             Bitmap tempBitmap = BmpUnknown;
             RectangleF tempRec = new RectangleF(new Vector(0, 0), TileSize);
 
-            Size tempMapSize = aMap.TheSize;
+            RectangleF tempMapSize = aMap.TheBoundingBox;
             for (int x = 0; x < tempMapSize.Width; x++)
             {
                 for (int y = 0; y < tempMapSize.Height; y++)

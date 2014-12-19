@@ -41,8 +41,8 @@ namespace GameController
             comboBoxRenderers.SelectedIndexChanged += comboBoxRenderers_SelectedIndexChanged;
 
 
-            FormPositioner.PlaceOnSecondScreenIfPossible(this,FormPositioner.Locations.TopLeft, false); 
-            FormPositioner.PlaceNextToForm(formTempStatus,this,FormPositioner.Locations.Right);
+            FormPositioner.PlaceOnSecondScreenIfPossible(this, FormPositioner.Locations.TopLeft, false);
+            FormPositioner.PlaceNextToForm(formTempStatus, this, FormPositioner.Locations.Right);
 
             theGameCore.Start();
 
@@ -67,6 +67,12 @@ namespace GameController
                     break;
                 case GameEventArgs.Types.Message:
                     break;
+                case GameEventArgs.Types.MapLoaded:
+
+                    break;
+                case GameEventArgs.Types.MapSaved:
+
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -77,6 +83,16 @@ namespace GameController
             theGameCore.Close();
 
             base.OnFormClosing(e);
+        }
+
+        private void buttonSaveMap_Click(object sender, EventArgs e)
+        {
+            theGameCore.SaveMap("testMap2.xml");
+        }
+
+        private void buttonLoadMap_Click(object sender, EventArgs e)
+        {
+            theGameCore.LoadMap("testMap.xml");
         }
     }
 }

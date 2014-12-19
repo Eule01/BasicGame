@@ -1,5 +1,6 @@
 ﻿#region
 
+using System.IO;
 using GameCore.Engine;
 using GameCore.Interface;
 using GameCore.Render;
@@ -113,6 +114,38 @@ namespace GameCore
         }
 
         #endregion
+
+        public void SaveMap(string aFilePath)
+        {
+            string tempFilePath = FileNameToMapFileName(aFilePath);
+            theGameStatus.SaveMap(tempFilePath);
+            TheGameCore.OnGameEventHandler(new GameEventArgs(GameEventArgs.Types.MapSaved)
+                {
+                    Message = tempFilePath
+                });
+        }
+
+        public void LoadMap(string aFilePath)
+        {
+            Pause();
+            string tempFilePath = FileNameToMapFileName(aFilePath);
+            theGameStatus.LoadMap(tempFilePath);
+            theRenderer.MapLoaded();
+            TheGameCore.OnGameEventHandler(new GameEventArgs(GameEventArgs.Types.MapLoaded)
+                {
+                    Message = tempFilePath
+                });
+            Resume();
+        }
+
+        private static string FileNameToMapFileName(string aFilePath)
+        {
+            string tempPath = Path.GetDirectoryName(aFilePath);
+            string aFileName = Path.GetFileNameWithoutExtension(aFilePath);
+            aFileName = "Map_" + aFileName + ".xml";
+            string tempFilePath = Path.Combine(tempPath, aFileName);
+            return tempFilePath;
+        }
 
         #region Game Events
 
