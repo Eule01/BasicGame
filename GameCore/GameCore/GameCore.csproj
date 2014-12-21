@@ -21,6 +21,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -70,11 +71,15 @@
     </Compile>
     <Compile Include="Render\OpenGl4CSharp\Camera.cs" />
     <Compile Include="Render\OpenGl4CSharp\Font.cs" />
+    <Compile Include="Render\OpenGl4CSharp\IRenderLayer.cs" />
     <Compile Include="Render\OpenGl4CSharp\ObjLoader.cs" />
     <Compile Include="Render\OpenGl4CSharp\ObjMaterial.cs" />
     <Compile Include="Render\OpenGl4CSharp\ObjObject.cs" />
     <Compile Include="Render\OpenGl4CSharp\RendererOpenGl4CSharp.cs" />
     <Compile Include="Render\OpenGl4CSharp\RenderGameObject.cs" />
+    <Compile Include="Render\OpenGl4CSharp\RenderLayerGame.cs" />
+    <Compile Include="Render\OpenGl4CSharp\RenderLayerBase.cs" />
+    <Compile Include="Render\OpenGl4CSharp\RenderLayerTextInfo.cs" />
     <Compile Include="Render\OpenGl4CSharp\RenderObjects.cs" />
     <Compile Include="Render\Renderer.cs" />
     <Compile Include="Render\RendererBase.cs" />

@@ -16,7 +16,16 @@ http://www.codeproject.com/Articles/564534/Migration-Strategy-Game
 http://www.codeproject.com/Articles/486285/XNAplustoplusMonoGameplusandplusbeyond
 http://www.codeproject.com/Articles/25940/Game-Programming-Two
 
+OpenGL with Menu and all:
+http://www.codeproject.com/Articles/30775/TetroGL-An-OpenGL-Game-Tutorial-in-C-for-Win32-pla
+First person game tutorial in OpenTK with HUD (all aspects, very good):
+http://randomcodingprojects.wordpress.com/tag/opentk/
 
+Layer/states in opentk:
+http://blog.robmaister.com/advanced-state-management-in-games/
+https://github.com/Robmaister?tab=repositories
+Example game C# opentk (state menu etc.)
+https://github.com/Robmaister/RPI-Game-Jam-10-27-12/tree/master/RPI-Game-Jam-10-27-12
 
 3D game development:
 http://www.codeproject.com/Articles/246542/Ten-Things-to-Achieve-When-Starting-D-Programming
@@ -99,6 +108,9 @@ http://www.lighthouse3d.com/tutorials/glut-tutorial/
 
 http://www.codeproject.com/Articles/23778/OpenGL-D-Navigation-With-Tao-and-C-Tao-OpenGL-Ta
 http://www.codeproject.com/Articles/23840/OpenGL-One-Window-Views-With-Tao-and-C-Multiple
+
+http://freeglut.sourceforge.net/docs/api.php
+
 
 Mouse coordinates into world coordinates
 https://sites.google.com/site/vamsikrishnav/gluunproject
