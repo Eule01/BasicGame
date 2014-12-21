@@ -1,10 +1,9 @@
 #region
 
-
+using System.Drawing;
+using OpenGL;
 
 #endregion
-
-using OpenGL;
 
 namespace GameCore.Render.OpenGl4CSharp
 {
@@ -155,5 +154,20 @@ namespace GameCore.Render.OpenGl4CSharp
             Vector3 axis = orientation*Vector3.UnitX;
             Rotate(angle, axis);
         }
+
+
+        public void LookAt(Vector3 aLocation)
+        {
+            Vector3 tempDirection = -position + aLocation;
+            SetDirection(tempDirection);
+        }
+
+        public void LookAtRectangle(Vector3 topLeft, Vector3 bottomRight)
+        {
+            Vector3 tempCenter = (-topLeft + bottomRight)*0.5f + topLeft;
+            LookAt(tempCenter);
+        }
+
+
     }
 }

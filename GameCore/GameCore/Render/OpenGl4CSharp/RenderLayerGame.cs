@@ -35,6 +35,7 @@ namespace GameCore.Render.OpenGl4CSharp
 
         private List<ObjObject> theTileObjects;
         private List<RenderGameObject> theRenderGameObjects;
+        private RenderGameObject playerObjObject = null;
 
         /// <summary>
         ///     The near clipping distance.
@@ -74,7 +75,7 @@ namespace GameCore.Render.OpenGl4CSharp
             // set up the projection and view matrix
             program.Use();
             projectionMatrix = Matrix4.CreatePerspectiveFieldOfView(Fov, (float) Width/Height, ZNear,
-                                                                     ZFar);
+                                                                    ZFar);
             program["projection_matrix"].SetValue(projectionMatrix);
             program["model_matrix"].SetValue(Matrix4.Identity);
 
@@ -195,7 +196,7 @@ namespace GameCore.Render.OpenGl4CSharp
             //            projection_matrix = Matrix4.CreatePerspectiveFieldOfView(0.45f, (float) Width/Height, 0.1f,
             //                                                                     1000f);
             projectionMatrix = Matrix4.CreatePerspectiveFieldOfView(Fov, (float) Width/Height, ZNear,
-                                                                     ZFar);
+                                                                    ZFar);
             program["projection_matrix"].SetValue(projectionMatrix);
         }
 
@@ -298,6 +299,17 @@ namespace GameCore.Render.OpenGl4CSharp
             else if (key == Glut.GLUT_KEY_LEFT) camLeft = false;
             else if (key == Glut.GLUT_KEY_PAGE_UP) camUp = false;
             else if (key == Glut.GLUT_KEY_PAGE_DOWN) camDown = false;
+            else if (key == Glut.GLUT_KEY_HOME)
+                Camera.LookAt(new Vector3(playerObjObject.TheGameObject.Location.X,
+                                          playerObjObject.TheGameObject.Location.Y, 0.0f));
+            else if (key == Glut.GLUT_KEY_END)
+            {
+                RectangleF tempRec = TheGameStatus.TheMap.TheBoundingBox;
+                Vector3 tempTopLeft = new Vector3(tempRec.Location.X, tempRec.Location.Y, 0.0f);
+                Vector3 tempBottomRight = new Vector3(tempRec.Right, tempRec.Bottom, 0.0f);
+
+                Camera.LookAtRectangle(tempTopLeft, tempBottomRight);
+            }
         }
 
         public override void OnKeyboardDown(byte key, int x, int y)
@@ -360,7 +372,6 @@ namespace GameCore.Render.OpenGl4CSharp
 
             foreach (GameObject gameObject in gameObjects)
             {
-                //                Vector tempLoc = gameObject.Location;
                 Vector tempLoc = new Vector(0.0f, 0.0f);
                 tempLoc -= new Vector(gameObject.Diameter*0.5f, gameObject.Diameter*0.5f);
                 RenderGameObject tempObjObject = CreateCube(program, new Vector3(tempLoc.X, tempLoc.Y, 0),
@@ -369,8 +380,10 @@ namespace GameCore.Render.OpenGl4CSharp
                 tempObjObject.Material = gameObjectsTextures[gameObject.TheObjectId].Material;
 
                 tempObjObject.TheGameObject = gameObject;
-
-
+                if (gameObject.TheObjectId == GameObject.ObjcetIds.Player)
+                {
+                    playerObjObject = tempObjObject;
+                }
                 tempObjList.Add(tempObjObject);
             }
             return tempObjList;
@@ -457,7 +470,6 @@ namespace GameCore.Render.OpenGl4CSharp
 
             tempObj = new ObjObject(vertex, element);
             return tempObj;
-            //            return new VAO(program, new VBO<Vector3>(vertex), new VBO<int>(element, BufferTarget.ElementArrayBuffer, BufferUsageHint.StaticRead));
         }
 
         #endregion
