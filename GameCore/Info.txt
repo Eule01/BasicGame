@@ -27,15 +27,6 @@ https://github.com/Robmaister?tab=repositories
 Example game C# opentk (state menu etc.)
 https://github.com/Robmaister/RPI-Game-Jam-10-27-12/tree/master/RPI-Game-Jam-10-27-12
 
-Selecting/Picking objects:
-http://www.lighthouse3d.com/opengl/picking/
-http://www.opengl-tutorial.org/miscellaneous/clicking-on-objects/
-http://www.mbsoftworks.sk/index.php?page=tutorials&series=1&tutorial=21
-http://www.mbsoftworks.sk/index.php?page=tutorials&series=1
-https://www.opengl.org/archives/resources/faq/technical/selection.htm
-http://web.engr.oregonstate.edu/~mjb/cs553/Handouts/Picking/picking.pdf
-http://www.opentk.com/node/213
-
 
 3D game development:
 http://www.codeproject.com/Articles/246542/Ten-Things-to-Achieve-When-Starting-D-Programming
@@ -98,6 +89,19 @@ https://www.opengl.org/sdk/docs/man4/
 Tutorials:
 http://www.codeproject.com/Articles/771225/Learning-Modern-OpenGL
 https://github.com/yanko/opengl-series-csharp
+
+Selecting/Picking objects:
+http://www.lighthouse3d.com/opengl/picking/
+http://www.opengl-tutorial.org/miscellaneous/clicking-on-objects/
+http://www.mbsoftworks.sk/index.php?page=tutorials&series=1&tutorial=21
+http://www.mbsoftworks.sk/index.php?page=tutorials&series=1
+https://www.opengl.org/archives/resources/faq/technical/selection.htm
+http://web.engr.oregonstate.edu/~mjb/cs553/Handouts/Picking/picking.pdf
+http://www.opentk.com/node/213
+http://www.glprogramming.com/red/chapter13.html
+http://en.wikibooks.org/wiki/OpenGL_Programming/Object_selection
+http://schabby.de/picking-opengl-ray-tracing/
+
 
 OpenGL Projection Matrix, depth buffer
 http://www.songho.ca/opengl/gl_projectionmatrix.html
