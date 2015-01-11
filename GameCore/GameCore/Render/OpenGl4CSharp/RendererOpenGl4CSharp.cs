@@ -1,5 +1,6 @@
 #region
 
+using System;
 using System.Diagnostics;
 using System.Threading;
 using CodeToast;
@@ -27,6 +28,8 @@ namespace GameCore.Render.OpenGl4CSharp
 
         private RenderLayerTextInfo layerInfo;
 
+        private RenderLayerHud layerHud;
+
         private Stopwatch watch;
 
         private bool fullscreen;
@@ -50,6 +53,8 @@ namespace GameCore.Render.OpenGl4CSharp
         {
             exit = false;
             Glut.glutInit();
+
+ 
             Glut.glutInitDisplayMode(Glut.GLUT_DOUBLE | Glut.GLUT_DEPTH | Glut.GLUT_ALPHA | Glut.GLUT_STENCIL |
                                      Glut.GLUT_MULTISAMPLE);
 
@@ -76,6 +81,17 @@ namespace GameCore.Render.OpenGl4CSharp
             Glut.glutMouseFunc(OnMouse);
             Glut.glutMotionFunc(OnMove);
 
+            #region GL_VERSION
+            //this will return your version of opengl
+            int major, minor;
+            major = Gl.GetInteger(GetPName.MajorVersion);
+            minor = Gl.GetInteger(GetPName.MinorVersion);
+            Console.WriteLine("Major " + major + " Minor " + minor);
+            //you can also get your GLSL version, although not sure if it varies from the above
+            Console.WriteLine("GLSL " + Gl.GetString(StringName.ShadingLanguageVersion));
+            #endregion
+
+
             Gl.Enable(EnableCap.DepthTest);
 
             Gl.Enable(EnableCap.Blend);
@@ -84,6 +100,9 @@ namespace GameCore.Render.OpenGl4CSharp
             layerGame = new RenderLayerGame(width, height, TheGameStatus, TheUserInput);
             layerGame.OnLoad();
 
+            layerHud = new RenderLayerHud(width,height,TheGameStatus,TheUserInput);
+            layerHud.OnLoad();
+     
             layerInfo = new RenderLayerTextInfo(width, height, TheGameStatus, TheUserInput);
             layerInfo.OnLoad();
 
@@ -150,6 +169,7 @@ namespace GameCore.Render.OpenGl4CSharp
 
                 layerGame.OnRenderFrame(deltaTime);
                 layerInfo.OnRenderFrame(deltaTime);
+                layerHud.OnRenderFrame(deltaTime);
 
                 Glut.glutSwapBuffers();
             }
@@ -187,13 +207,15 @@ namespace GameCore.Render.OpenGl4CSharp
             this.width = width;
             this.height = height;
 
-            layerGame.OnReshape(this.width, this.height);
-            layerInfo.OnReshape(this.width, this.height);
+            layerGame.OnReshape(width, height);
+            layerHud.OnReshape(width, height);
+            layerInfo.OnReshape(width, height);
         }
 
         private void OnClose()
         {
             layerGame.OnClose();
+            layerHud.OnClose();
             layerInfo.OnClose();
         }
 
