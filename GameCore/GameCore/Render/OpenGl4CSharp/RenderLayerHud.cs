@@ -2,7 +2,6 @@
 
 using System.Collections.Generic;
 using System.Drawing;
-using GameCore.GameObjects;
 using GameCore.Interface;
 using GameCore.Map;
 using GameCore.Utils;
@@ -17,6 +16,7 @@ namespace GameCore.Render.OpenGl4CSharp
         private ShaderProgram hudProgram;
         private ObjLoader objectList;
         private List<ObjObject> theTileObjects;
+        private List<ObjHud> theHudObjects = new List<ObjHud>();
 
 
         public RenderLayerHud(int width, int height, GameStatus theGameStatus, UserInput theUserInput)
@@ -37,7 +37,7 @@ namespace GameCore.Render.OpenGl4CSharp
 //            hudProgram["color"].SetValue(new Vector3(1, 1, 1));
 
             Dictionary<Tile.TileIds, PlainBmpTexture> tempTiletypeList =
-                 RenderObjects.CreateTileTextures(new Size(20, 20), hudProgram);
+                RenderObjects.CreateTileTextures(new Size(20, 20), hudProgram);
             List<ObjObject> tempObjList = new List<ObjObject>();
             int counter = 2;
             int zeroX = -Width/2;
@@ -45,16 +45,37 @@ namespace GameCore.Render.OpenGl4CSharp
             Size tempSize = new Size(50, 50);
             foreach (KeyValuePair<Tile.TileIds, PlainBmpTexture> tempTile in tempTiletypeList)
             {
-                Vector tempLoc = new Vector(zeroX + 10, zeroY - 10 - counter * (tempSize.Height+10));
+                Vector tempLoc = new Vector(zeroX + 10, zeroY - 10 - counter*(tempSize.Height + 10));
 
                 ObjObject tempObjObject = RenderLayerGame.CreateSquare(hudProgram, new Vector3(tempLoc.X, tempLoc.Y, 0),
-                                                       new Vector3(tempLoc.X + tempSize.Width, tempLoc.Y + tempSize.Height, 0));
+                                                                       new Vector3(tempLoc.X + tempSize.Width,
+                                                                                   tempLoc.Y + tempSize.Height, 0));
                 tempObjObject.Material = tempTiletypeList[tempTile.Key].Material;
 
                 tempObjList.Add(tempObjObject);
                 counter++;
             }
             theTileObjects.AddRange(tempObjList);
+
+            List<ObjHud> tempHudObjList = new List<ObjHud>();
+            counter = 2;
+            tempSize = new Size(50, 50);
+            foreach (KeyValuePair<Tile.TileIds, PlainBmpTexture> tempTile in tempTiletypeList)
+            {
+                Vector2 tempLoc = new Vector2(10, 10 + counter*(tempSize.Height + 10));
+
+                ObjHud tempObjObject = RenderLayerGame.CreateSquareHud(hudProgram, new Vector3(0, 0, 0),
+                                                                       new Vector3(tempSize.Width, tempSize.Height, 0),
+                                                                       ObjHud.Anchors.BottomRight, tempLoc, tempSize);
+                tempObjObject.Size = tempSize;
+                tempObjObject.UpdatePosition(Width, Height);
+                tempObjObject.Material = tempTiletypeList[tempTile.Key].Material;
+
+
+                tempHudObjList.Add(tempObjObject);
+                counter++;
+            }
+            theHudObjects.AddRange(tempHudObjList);
         }
 
         public override void OnDisplay()
@@ -69,29 +90,40 @@ namespace GameCore.Render.OpenGl4CSharp
             Gl.UseProgram(hudProgram.ProgramID);
 //            Gl.BindTexture(font.FontTexture);
 
-            if (objectList != null)
-            {
-                objectList.Draw();
-            }
+//            if (objectList != null)
+//            {
+//                objectList.Draw();
+//            }
 
 
-            if (theTileObjects != null)
+//            if (theTileObjects != null)
+//            {
+//                foreach (ObjObject theTileObject in theTileObjects)
+//                {
+//                    theTileObject.Draw();
+//                }
+//            }
+
+            foreach (ObjHud theHudObject in theHudObjects)
             {
-                foreach (ObjObject theTileObject in theTileObjects)
-                {
-                    theTileObject.Draw();
-                }
+                theHudObject.Draw(hudProgram);
             }
         }
 
         public override void OnReshape(int width, int height)
         {
-
             Width = width;
             Height = height;
 
             Gl.UseProgram(hudProgram.ProgramID);
             hudProgram["projection_matrix"].SetValue(Matrix4.CreateOrthographic(width, height, 0, 1000));
+
+            foreach (ObjHud theHudObject in theHudObjects)
+            {
+                theHudObject.UpdatePosition(Width, Height);
+            }
+
+
 //
 //            information.Position = new Vector2(-width / 2 + 10, height / 2 - font.Height - 10);
         }
@@ -105,6 +137,11 @@ namespace GameCore.Render.OpenGl4CSharp
                     aObjObject.Dispose();
                 }
             }
+            foreach (ObjHud aHudObject in theHudObjects)
+            {
+                aHudObject.Dispose();
+            }
+
             if (objectList != null)
             {
                 objectList.Dispose();
@@ -185,6 +222,7 @@ void main(void)
 //    fragment = vec4(diffuse * sample.xyz, transparency * sample.a);
 }
 ";
+
         #endregion
     }
 }

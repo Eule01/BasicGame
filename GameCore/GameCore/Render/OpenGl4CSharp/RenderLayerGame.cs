@@ -472,6 +472,28 @@ namespace GameCore.Render.OpenGl4CSharp
             return tempObj;
         }
 
+        /// <returns></returns>
+        public static ObjHud CreateSquareHud(ShaderProgram program, Vector3 min, Vector3 max, ObjHud.Anchors anAnchor, Vector2 aPosition, Size aSize)
+        {
+            ObjHud tempObj;
+            Vector3[] vertex = new[]
+                {
+                    new Vector3(min.x, min.y, min.z),
+                    new Vector3(max.x, min.y, min.z),
+                    new Vector3(min.x, max.y, max.z),
+                    new Vector3(max.x, max.y, max.z),
+                };
+
+            int[] element = new[]
+                {
+                    0, 1, 3,
+                    0, 2, 3,
+                };
+
+            tempObj = new ObjHud(vertex, element) {Anchor = anAnchor, Position = aPosition, Size = aSize};
+            return tempObj;
+        }
+
         #endregion
 
         // functions:
