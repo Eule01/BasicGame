@@ -191,12 +191,6 @@ namespace GameCore.Render.OpenGl4CSharp
 //                MouseWorld = RenderLayerGame.ConvertScreenToWorldCoordsNoDepth(x, y, Camera.ViewMatrix, projectionMatrix, Vector3.Zero);
                 MouseWorld = RenderLayerGame.ConvertScreenToWorldCoordsNoDepth(x, y, Matrix4.Identity, projectionMatrix,
                                                                                Vector3.Zero);
-                Vector2 playerMouseVec =
-                    (new Vector2(MouseWorld.x, MouseWorld.y) -
-                     new Vector2(TheGameStatus.ThePlayer.Location.X, TheGameStatus.ThePlayer.Location.Y)).Normalize();
-
-                TheGameStatus.ThePlayer.Orientation = new Vector(playerMouseVec.x, playerMouseVec.y);
-
                 foreach (ObjHudPanel aHudObject in theHudPanels)
                 {
                     ObjObject tempObj = aHudObject.IsOn((int) MouseWorld.x, (int) MouseWorld.y);
