@@ -82,8 +82,9 @@ namespace GameCore.Render.OpenGl4CSharp
             information.Dispose();
         }
 
-        public override void OnMouse(int button, int state, int x, int y)
+        public override bool OnMouse(int button, int state, int x, int y)
         {
+            return false;
         }
 
         public override void OnMove(int x, int y)

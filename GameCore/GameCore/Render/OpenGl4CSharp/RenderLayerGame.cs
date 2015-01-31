@@ -224,7 +224,7 @@ namespace GameCore.Render.OpenGl4CSharp
             program.Dispose();
         }
 
-        public override void OnMouse(int button, int state, int x, int y)
+        public override bool OnMouse(int button, int state, int x, int y)
         {
             if (button == Glut.GLUT_LEFT_BUTTON && state == Glut.GLUT_DOWN)
             {
@@ -253,6 +253,7 @@ namespace GameCore.Render.OpenGl4CSharp
                     Glut.glutWarpPointer(downX, downY);
                 }
             }
+            return true;
         }
 
         public override void OnMove(int x, int y)
@@ -473,9 +474,10 @@ namespace GameCore.Render.OpenGl4CSharp
         }
 
         /// <returns></returns>
-        public static ObjHud CreateSquareHud(ShaderProgram program, Vector3 min, Vector3 max, ObjHud.Anchors anAnchor, Vector2 aPosition, Size aSize)
+        public static ObjHudButton CreateSquareHudButton(ShaderProgram program, Vector3 min, Vector3 max, ObjHudButton.Anchors anAnchor,
+                                             Vector2 aPosition, Size aSize)
         {
-            ObjHud tempObj;
+            ObjHudButton tempObj;
             Vector3[] vertex = new[]
                 {
                     new Vector3(min.x, min.y, min.z),
@@ -490,13 +492,38 @@ namespace GameCore.Render.OpenGl4CSharp
                     0, 2, 3,
                 };
 
-            tempObj = new ObjHud(vertex, element) {Anchor = anAnchor, Position = aPosition, Size = aSize};
+            tempObj = new ObjHudButton(vertex, element) { Anchor = anAnchor, Position = aPosition, Size = aSize };
+            return tempObj;
+        }
+
+       /// <returns></returns>
+        public static ObjHudPanel CreateSquareHudPanel(ShaderProgram program, Vector3 min, Vector3 max, ObjHudPanel.Anchors anAnchor,
+                                             Vector2 aPosition, Size aSize)
+        {
+            ObjHudPanel tempObj;
+            Vector3[] vertex = new[]
+                {
+                    new Vector3(min.x, min.y, min.z),
+                    new Vector3(max.x, min.y, min.z),
+                    new Vector3(min.x, max.y, max.z),
+                    new Vector3(max.x, max.y, max.z),
+                };
+
+            int[] element = new[]
+                {
+                    0, 1, 3,
+                    0, 2, 3,
+                };
+
+            tempObj = new ObjHudPanel(vertex, element) { Anchor = anAnchor, Position = aPosition, Size = aSize };
             return tempObj;
         }
 
         #endregion
 
         // functions:
+        #region Mouse to World
+
         /// <summary>
         ///     http://gamedev.stackexchange.com/questions/51820/how-can-i-convert-screen-coordinatess-to-world-coordinates-in-opentk
         ///     https://sites.google.com/site/vamsikrishnav/gluunproject
@@ -539,6 +566,62 @@ namespace GameCore.Render.OpenGl4CSharp
             mouse.z = z;
             Vector4 vector = UnProject(projectionMatrix, modelViewMatrix, new Size(viewport[2], viewport[3]), mouse);
             Vector3 coords = new Vector3(vector.x, vector.y, vector.z);
+            return coords;
+        }
+
+        /// <summary>
+        ///     This one is nearly working perfectly. There is a small error which I think can be corrected using something like this
+        ///     mouse.Y = y + (ClientRectangle.Height - glview.Size.Height);
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="modelViewMatrix"></param>
+        /// <param name="projectionMatrix"></param>
+        /// <param name="cameraPosition"></param>
+        /// <returns></returns>
+        public static Vector3 ConvertScreenToWorldCoordsNoDepth(int x, int y, Matrix4 modelViewMatrix,
+                                                                Matrix4 projectionMatrix,
+                                                                Vector3 cameraPosition)
+        {
+            int[] viewport = new int[4];
+            Gl.GetIntegerv(GetPName.Viewport, viewport);
+
+            int[] zInt = new int[1];
+//            Gl.ReadPixels(x, viewport[3] - y, 1, 1, PixelFormat.DepthComponent,
+//                          PixelType.Float, zInt);
+//            byte[] bytes = BitConverter.GetBytes(zInt[0]);
+//            float z = BitConverter.ToSingle(bytes, 0);
+            // http://www.songho.ca/opengl/gl_projectionmatrix.html
+            // http://web.archive.org/web/20130416194336/http://olivers.posterous.com/linear-depth-in-glsl-for-real
+            // The depth stored in the buffer [0 1].
+//            float z_b = z;
+            float z_b = 0.0f;
+
+            // The depth in the normalized device coordinates [-1 1].
+            float z_n = 2.0f*z_b - 1.0f;
+
+            // The distance to the camera plane in grid units.
+            float z_e = 2.0f*ZFar*ZNear/(ZFar + ZNear - (ZFar - ZNear)*(2.0f*z_b - 1.0f));
+
+            Vector3 mouse;
+            //            mouse.y = viewport[3] - y;
+            //                        mouse.y =-( viewport[3] - y );
+            //            mouse.Y = y + (ClientRectangle.Height - glview.Size.Height);
+
+            mouse.x = x;
+            mouse.y = y; //B
+            mouse.z = z_n; //C
+            Vector4 vector = UnProject(projectionMatrix, modelViewMatrix, new Size(viewport[2], viewport[3]), mouse);
+
+            Vector3 distanceVec = -cameraPosition + vector.Xyz;
+            if (distanceVec.Length > ZFar)
+            {
+                Vector3 distNormVec = distanceVec.Normalize();
+                vector.Xyz = cameraPosition + (distNormVec*ZFar*0.99f);
+            }
+
+            Vector3 coords = new Vector3(vector.x, vector.y, vector.z);
+
             return coords;
         }
 
@@ -628,6 +711,8 @@ namespace GameCore.Render.OpenGl4CSharp
 
             return vec;
         }
+
+        #endregion
 
 
         private const string VertexShader = @"

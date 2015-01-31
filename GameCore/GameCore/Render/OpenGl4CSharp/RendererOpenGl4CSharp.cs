@@ -39,6 +39,9 @@ namespace GameCore.Render.OpenGl4CSharp
 
         private float fps = 30;
 
+        public Vector3 MouseWorld = Vector3.Zero;
+        public Vector2 MouseCoord = Vector2.Zero;
+
         public RendererOpenGl4CSharp()
         {
             name = "RendererOpenGl4CSharp";
@@ -54,7 +57,7 @@ namespace GameCore.Render.OpenGl4CSharp
             exit = false;
             Glut.glutInit();
 
- 
+
             Glut.glutInitDisplayMode(Glut.GLUT_DOUBLE | Glut.GLUT_DEPTH | Glut.GLUT_ALPHA | Glut.GLUT_STENCIL |
                                      Glut.GLUT_MULTISAMPLE);
 
@@ -82,6 +85,7 @@ namespace GameCore.Render.OpenGl4CSharp
             Glut.glutMotionFunc(OnMove);
 
             #region GL_VERSION
+
             //this will return your version of opengl
             int major, minor;
             major = Gl.GetInteger(GetPName.MajorVersion);
@@ -89,8 +93,8 @@ namespace GameCore.Render.OpenGl4CSharp
             Console.WriteLine("Major " + major + " Minor " + minor);
             //you can also get your GLSL version, although not sure if it varies from the above
             Console.WriteLine("GLSL " + Gl.GetString(StringName.ShadingLanguageVersion));
-            #endregion
 
+            #endregion
 
             Gl.Enable(EnableCap.DepthTest);
 
@@ -100,9 +104,9 @@ namespace GameCore.Render.OpenGl4CSharp
             layerGame = new RenderLayerGame(width, height, TheGameStatus, TheUserInput);
             layerGame.OnLoad();
 
-            layerHud = new RenderLayerHud(width,height,TheGameStatus,TheUserInput);
+            layerHud = new RenderLayerHud(width, height, TheGameStatus, TheUserInput);
             layerHud.OnLoad();
-     
+
             layerInfo = new RenderLayerTextInfo(width, height, TheGameStatus, TheUserInput);
             layerInfo.OnLoad();
 
@@ -152,8 +156,8 @@ namespace GameCore.Render.OpenGl4CSharp
                 if (layerInfo.ShowInfo)
                 {
                     string tempText = string.Format(
-                        "FPS: {0:0.00}, Mouse: [{1:0.0},{2:0.0},{3:0.0}], Camera: [{4:0.0},{5:0.0},{6:0.0}]",
-                        fps, layerGame.MouseWorld.x, layerGame.MouseWorld.y, layerGame.MouseWorld.z,
+                        "FPS: {0:0.00}, Mouse: [({1:0},{2:0}),{3:0.0},{4:0.0},{5:0.0}], Camera: [{6:0.0},{7:0.0},{8:0.0}]",
+                        fps, MouseCoord.x, MouseCoord.y, MouseWorld.x, MouseWorld.y, MouseWorld.z,
                         layerGame.Camera.Position.x, layerGame.Camera.Position.y, layerGame.Camera.Position.z);
                     layerInfo.GameInfo = tempText;
                 }
@@ -164,7 +168,6 @@ namespace GameCore.Render.OpenGl4CSharp
                 // set camForward the viewport and clear the previous depth and color buffers
                 Gl.Viewport(0, 0, width, height);
                 Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
 
 
                 layerGame.OnRenderFrame(deltaTime);
@@ -223,7 +226,18 @@ namespace GameCore.Render.OpenGl4CSharp
 
         private void OnMouse(int button, int state, int x, int y)
         {
-            layerGame.OnMouse(button, state, x, y);
+            MouseCoord = new Vector2(x, y);
+            if (layerHud.OnMouse(button, state, x, y))
+            {
+                MouseWorld = layerHud.MouseWorld;
+            }
+            else
+            {
+                if (layerGame.OnMouse(button, state, x, y))
+                {
+                    MouseWorld = layerGame.MouseWorld;
+                }
+            }
         }
 
         private void OnMove(int x, int y)

@@ -70,9 +70,10 @@
       <DependentUpon>UserControlMainGame.cs</DependentUpon>
     </Compile>
     <Compile Include="Render\OpenGl4CSharp\Camera.cs" />
+    <Compile Include="Render\OpenGl4CSharp\ObjHudPanel.cs" />
     <Compile Include="Render\OpenGl4CSharp\Font.cs" />
     <Compile Include="Render\OpenGl4CSharp\IRenderLayer.cs" />
-    <Compile Include="Render\OpenGl4CSharp\ObjHud.cs" />
+    <Compile Include="Render\OpenGl4CSharp\ObjHudButton.cs" />
     <Compile Include="Render\OpenGl4CSharp\ObjLoader.cs" />
     <Compile Include="Render\OpenGl4CSharp\ObjMaterial.cs" />
     <Compile Include="Render\OpenGl4CSharp\ObjObject.cs" />

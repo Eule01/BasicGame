@@ -25,7 +25,7 @@ namespace GameCore.Render.OpenGl4CSharp
         public abstract void OnRenderFrame(float deltaTime);
         public abstract void OnReshape(int width, int height);
         public abstract void OnClose();
-        public abstract void OnMouse(int button, int state, int x, int y);
+        public abstract bool OnMouse(int button, int state, int x, int y);
         public abstract void OnMove(int x, int y);
         public abstract void OnSpecialKeyboardDown(int key, int x, int y);
         public abstract void OnSpecialKeyboardUp(int key, int x, int y);

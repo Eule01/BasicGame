@@ -1,11 +1,13 @@
 ﻿#region
 
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using GameCore.Interface;
 using GameCore.Map;
 using GameCore.Utils;
 using OpenGL;
+using Tao.FreeGlut;
 
 #endregion
 
@@ -16,7 +18,10 @@ namespace GameCore.Render.OpenGl4CSharp
         private ShaderProgram hudProgram;
         private ObjLoader objectList;
         private List<ObjObject> theTileObjects;
-        private List<ObjHud> theHudObjects = new List<ObjHud>();
+        private List<ObjHudPanel> theHudPanels = new List<ObjHudPanel>();
+
+        public Vector3 MouseWorld = Vector3.Zero;
+        private Matrix4 projectionMatrix;
 
 
         public RenderLayerHud(int width, int height, GameStatus theGameStatus, UserInput theUserInput)
@@ -31,7 +36,8 @@ namespace GameCore.Render.OpenGl4CSharp
 //            hudProgram = new ShaderProgram(vertexShader2Source, fragmentShader2Source);
 
             hudProgram.Use();
-            hudProgram["projection_matrix"].SetValue(Matrix4.CreateOrthographic(Width, Height, 0, 1000));
+            projectionMatrix = Matrix4.CreateOrthographic(Width, Height, 0, 1000);
+            hudProgram["projection_matrix"].SetValue(projectionMatrix);
             hudProgram["model_matrix"].SetValue(Matrix4.Identity);
 
 //            hudProgram["color"].SetValue(new Vector3(1, 1, 1));
@@ -47,9 +53,9 @@ namespace GameCore.Render.OpenGl4CSharp
             {
                 Vector tempLoc = new Vector(zeroX + 10, zeroY - 10 - counter*(tempSize.Height + 10));
 
-                ObjObject tempObjObject = RenderLayerGame.CreateSquare(hudProgram, new Vector3(tempLoc.X, tempLoc.Y, 0),
+                ObjObject tempObjObject = RenderLayerGame.CreateSquare(hudProgram, new Vector3(tempLoc.X, tempLoc.Y, -0.1),
                                                                        new Vector3(tempLoc.X + tempSize.Width,
-                                                                                   tempLoc.Y + tempSize.Height, 0));
+                                                                                   tempLoc.Y + tempSize.Height, -0.1));
                 tempObjObject.Material = tempTiletypeList[tempTile.Key].Material;
 
                 tempObjList.Add(tempObjObject);
@@ -57,25 +63,52 @@ namespace GameCore.Render.OpenGl4CSharp
             }
             theTileObjects.AddRange(tempObjList);
 
-            List<ObjHud> tempHudObjList = new List<ObjHud>();
+            tempSize = new Size(100, Height);
+            ObjHudPanel hudPanel = CreateHudPanel(tempSize, Color.Brown, ObjHudPanel.Anchors.TopRight);
+
+            theHudPanels.Add(hudPanel);
+
+
             counter = 2;
             tempSize = new Size(50, 50);
             foreach (KeyValuePair<Tile.TileIds, PlainBmpTexture> tempTile in tempTiletypeList)
             {
                 Vector2 tempLoc = new Vector2(10, 10 + counter*(tempSize.Height + 10));
 
-                ObjHud tempObjObject = RenderLayerGame.CreateSquareHud(hudProgram, new Vector3(0, 0, 0),
-                                                                       new Vector3(tempSize.Width, tempSize.Height, 0),
-                                                                       ObjHud.Anchors.BottomRight, tempLoc, tempSize);
-                tempObjObject.Size = tempSize;
-                tempObjObject.UpdatePosition(Width, Height);
-                tempObjObject.Material = tempTiletypeList[tempTile.Key].Material;
+                ObjHudButton tempObjHudButton = RenderLayerGame.CreateSquareHudButton(hudProgram, new Vector3(0, 0, 0),
+                                                                                      new Vector3(tempSize.Width,
+                                                                                                  tempSize.Height, 0),
+                                                                                      ObjHudButton.Anchors.TopRight,
+                                                                                      tempLoc, tempSize);
+                tempObjHudButton.Size = tempSize;
+                tempObjHudButton.UpdatePosition(Width, Height);
+                tempObjHudButton.Material = tempTiletypeList[tempTile.Key].Material;
+                tempObjHudButton.Name += ":" + tempTile.Key;
+                hudPanel.AddButton(tempObjHudButton);
 
-
-                tempHudObjList.Add(tempObjObject);
                 counter++;
             }
-            theHudObjects.AddRange(tempHudObjList);
+        }
+
+        private ObjHudPanel CreateHudPanel(Size tempSize, Color aColor, ObjHudPanel.Anchors anAnchor)
+        {
+            Vector2 tempLoc2 = new Vector2(0, 0);
+
+            SolidBrush tempBrush = new SolidBrush(aColor);
+            Bitmap tempBmp = BitmapHelper.CreatBitamp(new Size(20, 20), tempBrush);
+            ObjMaterial tempMaterial = new ObjMaterial(hudProgram) {DiffuseMap = new Texture(tempBmp)};
+
+
+            ObjHudPanel tempObjObject2 = RenderLayerGame.CreateSquareHudPanel(hudProgram, new Vector3(0, 0, 0),
+                                                                              new Vector3(tempSize.Width,
+                                                                                          tempSize.Height,
+                                                                                          0),
+                                                                              anAnchor, tempLoc2,
+                                                                              tempSize);
+            tempObjObject2.Size = tempSize;
+            tempObjObject2.UpdatePosition(Width, Height);
+            tempObjObject2.Material = tempMaterial;
+            return tempObjObject2;
         }
 
         public override void OnDisplay()
@@ -104,7 +137,7 @@ namespace GameCore.Render.OpenGl4CSharp
 //                }
 //            }
 
-            foreach (ObjHud theHudObject in theHudObjects)
+            foreach (ObjHudPanel theHudObject in theHudPanels)
             {
                 theHudObject.Draw(hudProgram);
             }
@@ -116,9 +149,10 @@ namespace GameCore.Render.OpenGl4CSharp
             Height = height;
 
             Gl.UseProgram(hudProgram.ProgramID);
-            hudProgram["projection_matrix"].SetValue(Matrix4.CreateOrthographic(width, height, 0, 1000));
+            projectionMatrix = Matrix4.CreateOrthographic(Width, Height, 0, 1000);
+            hudProgram["projection_matrix"].SetValue(projectionMatrix);
 
-            foreach (ObjHud theHudObject in theHudObjects)
+            foreach (ObjHudPanel theHudObject in theHudPanels)
             {
                 theHudObject.UpdatePosition(Width, Height);
             }
@@ -137,7 +171,7 @@ namespace GameCore.Render.OpenGl4CSharp
                     aObjObject.Dispose();
                 }
             }
-            foreach (ObjHud aHudObject in theHudObjects)
+            foreach (ObjHudPanel aHudObject in theHudPanels)
             {
                 aHudObject.Dispose();
             }
@@ -150,8 +184,30 @@ namespace GameCore.Render.OpenGl4CSharp
             hudProgram.Dispose();
         }
 
-        public override void OnMouse(int button, int state, int x, int y)
+        public override bool OnMouse(int button, int state, int x, int y)
         {
+            if (button == Glut.GLUT_LEFT_BUTTON && (state == Glut.GLUT_DOWN || state == Glut.GLUT_UP))
+            {
+//                MouseWorld = RenderLayerGame.ConvertScreenToWorldCoordsNoDepth(x, y, Camera.ViewMatrix, projectionMatrix, Vector3.Zero);
+                MouseWorld = RenderLayerGame.ConvertScreenToWorldCoordsNoDepth(x, y, Matrix4.Identity, projectionMatrix,
+                                                                               Vector3.Zero);
+                Vector2 playerMouseVec =
+                    (new Vector2(MouseWorld.x, MouseWorld.y) -
+                     new Vector2(TheGameStatus.ThePlayer.Location.X, TheGameStatus.ThePlayer.Location.Y)).Normalize();
+
+                TheGameStatus.ThePlayer.Orientation = new Vector(playerMouseVec.x, playerMouseVec.y);
+
+                foreach (ObjHudPanel aHudObject in theHudPanels)
+                {
+                    ObjObject tempObj = aHudObject.IsOn((int) MouseWorld.x, (int) MouseWorld.y);
+                    if (tempObj != null)
+                    {
+                        Console.WriteLine("Mouse: [" + x + "," + y + "] on HUD: " + tempObj + ".");
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         public override void OnMove(int x, int y)

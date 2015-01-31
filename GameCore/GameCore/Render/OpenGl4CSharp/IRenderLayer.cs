@@ -10,7 +10,15 @@
 
         #region UI
 
-        void OnMouse(int button, int state, int x, int y);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="button"></param>
+        /// <param name="state"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns>true if the mouse event has been processesd. In that case its not passed on</returns>
+        bool OnMouse(int button, int state, int x, int y);
         void OnMove(int x, int y);
         void OnSpecialKeyboardDown(int key, int x, int y);
         void OnSpecialKeyboardUp(int key, int x, int y);

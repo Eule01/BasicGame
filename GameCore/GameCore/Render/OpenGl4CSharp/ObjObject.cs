@@ -1,6 +1,10 @@
+#region
+
 using System;
 using System.Collections.Generic;
 using OpenGL;
+
+#endregion
 
 namespace GameCore.Render.OpenGl4CSharp
 {
@@ -11,7 +15,7 @@ namespace GameCore.Render.OpenGl4CSharp
         internal VBO<Vector2> uvs;
         internal VBO<int> triangles;
 
-        public string Name { get; private set; }
+        public string Name { get; internal set; }
 
         public ObjMaterial Material { get; set; }
 
@@ -187,6 +191,13 @@ namespace GameCore.Render.OpenGl4CSharp
             if (triangles != null) triangles.Dispose();
             if (uvs != null) uvs.Dispose();
             if (Material != null) Material.Dispose();
+        }
+
+        public override string ToString()
+        {
+            string outStr = "";
+            outStr += Name;
+            return outStr;
         }
     }
 }
